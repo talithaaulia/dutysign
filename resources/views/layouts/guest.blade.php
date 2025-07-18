@@ -14,13 +14,13 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+    <body class="font-sans text-gray-900 antialiased" style="background-image: url('{{ asset('images/background.png') }}'); background-size: cover; background-position: center;">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
             <div>
                 <a href="/">
                     <x-application-logo class="w-40 h-40 fill-current" />
                 </a>
-                <h1 class="text-2xl font-bold text-gray-800 mt-4 text-center">
+                <h1 class="text-4xl  font-bold text-white mt-4 text-center">
                     {{ config('app.name') }}
                 </h1>
             </div>
