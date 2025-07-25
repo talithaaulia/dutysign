@@ -4,9 +4,6 @@
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Laporan Perjalanan Dinas</h3>
 
-    {{-- Alert dummy --}}
-    {{-- <div class="alert alert-success">Laporan berhasil dihapus.</div> --}}
-
     {{-- Tabel laporan --}}
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
@@ -17,31 +14,21 @@
                     <th>Tanggal Laporan</th>
                     <th>Nama Pelapor</th>
                     <th>Checklist</th>
-                    <th>Berkas</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                {{-- Contoh data dummy --}}
+            <tbody class="text-center">
                 <tr>
-                    <td class="text-center">1</td>
+                    <td>1</td>
                     <td>000.4.5.6/7712/109.3/2025</td>
                     <td>2025-06-17</td>
-                    <td>Talitha A</td>
-                    <td>
+                    <td>Andi Wijaya</td>
+                    <td class="text-justify">
                         <ul>
                             <li>✔ Foto Kegiatan</li>
                             <li>✔ Scan Hardcopy</li>
                             <li>✘ E-Toll</li>
                             <li>✔ BBM</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li><a href="#">Foto Kegiatan</a></li>
-                            <li><a href="#">Scan Hardcopy</a></li>
-                            <li><span class="text-muted">Tidak Ada E-Toll</span></li>
-                            <li><a href="#">Bukti BBM</a></li>
                         </ul>
                     </td>
                     <td class="text-center">
