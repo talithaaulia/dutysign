@@ -25,8 +25,8 @@
         <div class="col-md-3 mb-3">
             <div class="card text-white bg-warning shadow">
                 <div class="card-body">
-                    <h5 class="card-title">Pegawai Dinas</h5>
-                    <p class="card-text fs-4">7</p>
+                    <h5 class="card-title">Jumlah Dinas 2025</h5>
+                    <p class="card-text fs-4">60</p>
                 </div>
             </div>
         </div>
@@ -43,33 +43,125 @@
 
     <hr class="my-4">
 
-    <div class="row">
-        <div class="col-md-6">
-            <h5>Daftar Surat Terbaru</h5>
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between">
-                    <span>No. Surat: 000.1.2.3/4461/107.1/2025</span>
-                    <span class="badge bg-warning">Menunggu</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span>No. Surat: 000.2.3.4/5562/108.2/2025</span>
-                    <span class="badge bg-success">Disetujui</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span>No. Surat: 000.4.5.6/7712/109.3/2025</span>
-                    <span class="badge bg-danger">Ditolak</span>
-                </li>
-            </ul>
-        </div>
-
-        <div class="col-md-6">
-            <h5>Statistik Perjalanan Dinas Bulan Ini</h5>
-            <div class="progress mb-2">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: 60%">Luar Kota: 60%</div>
-            </div>
-            <div class="progress">
-                <div class="progress-bar bg-secondary" role="progressbar" style="width: 10%">Dibatalkan: 10%</div>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="text-center mb-4">Statistik Perjalanan Dinas Tahun 2025</h5>
+                    <canvas id="chartTahunan" height="100"></canvas>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="row mt-5">
+        <div class="col-md-10 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3 text-center">Rekap Perjalanan Dinas Pegawai - {{ date('Y') }}</h5>
+
+                    <form method="GET" action="{{ route('dashboard') }}" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari nama pegawai...">
+                            <button class="btn btn-primary" type="submit">Cari</button>
+                        </div>
+                    </form>
+
+                    {{-- Filter data dummy --}}
+                    @php
+                        $search = strtolower(request('search'));
+                        $dummyData = [
+                            ['nama' => 'Ahmad Fauzi', 'jumlah' => 5],
+                            ['nama' => 'Sri Lestari', 'jumlah' => 3],
+                            ['nama' => 'Rina Wijaya', 'jumlah' => 7],
+                        ];
+                        $filteredData = array_filter($dummyData, function($item) use ($search) {
+                            return $search === '' || str_contains(strtolower($item['nama']), $search);
+                        });
+                        $filteredData = array_values($filteredData); // reset index array agar bisa dipakai di loop
+                    @endphp
+
+                    {{-- Tabel hasil pencarian --}}
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-secondary text-center">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Pegawai</th>
+                                <th>Jumlah Perjalanan Dinas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($filteredData as $i => $pegawai)
+                                <tr>
+                                    <td class="text-center">{{ $i + 1 }}</td>
+                                    <td>{{ $pegawai['nama'] }}</td>
+                                    <td class="text-center">{{ $pegawai['jumlah'] }} kali</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">Tidak ada data yang cocok</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('chartTahunan').getContext('2d');
+        const chartTahunan = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                datasets: [{
+                    label: 'Jumlah Dinas (%)',
+                    data: [15, 22, 35, 40, 25, 10, 60, 50, 30, 28, 20, 38],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Persentase Dinas (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '% dari total perjalanan dinas';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 @endsection
