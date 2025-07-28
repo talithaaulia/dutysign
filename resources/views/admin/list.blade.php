@@ -14,6 +14,7 @@
                     <th>Kepada</th>
                     <th>Status</th>
                     <th>Aksi</th>
+                    <th>Surat</th>
                 </tr>
             </thead>
             <tbody class="text-center">
@@ -31,9 +32,12 @@
                         <span class="badge bg-warning">Menunggu</span>
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary">Lihat</a>
+                        <a href="/detailspt" class="btn btn-sm btn-primary">Lihat</a>
                         <a href="#" class="btn btn-sm btn-warning">Edit</a>
                         <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+                    </td>
+                    <td>
+                        -
                     </td>
                 </tr>
 
@@ -51,9 +55,12 @@
                         <span class="badge bg-success">Disetujui</span>
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary">Lihat</a>
+                        <a href="/detailspt" class="btn btn-sm btn-primary">Lihat</a>
                         <a href="#" class="btn btn-sm btn-warning">Edit</a>
                         <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-success">Download</a>
                     </td>
                 </tr>
 
@@ -71,9 +78,12 @@
                         <span class="badge bg-danger">Ditolak</span>
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-primary">Lihat</a>
+                        <a href="/detailspt" class="btn btn-sm btn-primary">Lihat</a>
                         <a href="#" class="btn btn-sm btn-warning">Edit</a>
                         <a href="#" class="btn btn-sm btn-danger">Hapus</a>
+                    </td>
+                    <td>
+                        -
                     </td>
                 </tr>
             </tbody>
