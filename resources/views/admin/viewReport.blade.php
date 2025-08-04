@@ -32,8 +32,8 @@
                         </ul>
                     </td>
                     <td class="text-center">
-                        <a href="#" class="btn btn-sm btn-info mb-1">Lihat</a>
-                        <a href="#" class="btn btn-sm btn-warning mb-1">Edit</a>
+                        <a href="/detailreport" class="btn btn-sm btn-info mb-1">Lihat</a>
+                        <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
                         <form action="#" method="POST" style="display:inline-block">
                             @csrf
                             @method('DELETE')

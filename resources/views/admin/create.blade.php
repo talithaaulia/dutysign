@@ -17,10 +17,13 @@
         <div class="mb-3">
             <label class="form-label">Dasar</label>
             <div id="dasar-container">
-                <div class="row mb-2 dasar-item">
-                    <div class="col-auto pt-2">1.</div>
+                <div class="row mb-2 dasar-item align-items-start">
+                    <div class="col-auto pt-2 dasar-number">1.</div>
                     <div class="col">
                         <textarea name="dasar[]" class="form-control" placeholder="Isi dasar peraturan atau referensi" required></textarea>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-outline-danger" onclick="hapusKepada(this)" aria-label="Hapus Kepada">&times;</button>
                     </div>
                 </div>
             </div>
@@ -31,11 +34,10 @@
         <div class="mb-3">
             <label class="form-label">Kepada (Pegawai yang Ditugaskan)</label>
             <div id="kepada-container">
-                <div class="row mb-2">
+                <div class="row mb-2 kepada-row g-2 align-items-end">
                     <div class="col-md-4">
                         <select name="kepada[0][pegawai_id]" class="form-select pegawai-select" data-index="0" required>
                             <option value="">-- Pilih Pegawai --</option>
-                            {{-- Isi dari JS --}}
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -59,9 +61,12 @@
                             <option value="IV/a">IV/a</option>
                         </select>
                     </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-outline-danger" onclick="hapusKepada(this)" aria-label="Hapus Kepada">&times;</button>
+                    </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="tambahKepada()">+ Tambah Baris</button>
+            <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="tambahKepada()">+ Tambah Pegawai</button>
         </div>
 
         {{-- UNTUK --}}
@@ -99,6 +104,7 @@
     ];
 
     function loadPegawaiDropdown(select, idx) {
+        select.innerHTML = '<option value="">-- Pilih Pegawai --</option>';
         pegawaiData.forEach(p => {
             const option = document.createElement('option');
             option.value = p.id;
@@ -110,15 +116,19 @@
         // listener ubah NIP
         select.addEventListener('change', function () {
             const selected = this.options[this.selectedIndex];
-            const nip = selected.dataset.nip || '';
-            document.querySelector(`input[name="kepada[${idx}][nip]"]`).value = nip;
+            const nip = selected?.dataset?.nip || '';
+            const row = this.closest('.kepada-row');
+            if (row) {
+                const nipInput = row.querySelector('input[name^="kepada"][name$="[nip]"]');
+                if (nipInput) nipInput.value = nip;
+            }
         });
     }
 
     function tambahKepada() {
         const container = document.getElementById('kepada-container');
         const row = document.createElement('div');
-        row.classList.add('row', 'mb-2');
+        row.classList.add('row', 'mb-2', 'kepada-row', 'g-2', 'align-items-end');
         row.innerHTML = `
             <div class="col-md-4">
                 <select name="kepada[${index}][pegawai_id]" class="form-select pegawai-select" data-index="${index}" required>
@@ -126,7 +136,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <input type="text" name="kepada[${index}][nip]" class="form-control" placeholder="NIP" readonly>
+                <input type="text" name="kepada[${index}][nip]" class="form-control nip" placeholder="NIP" readonly>
             </div>
             <div class="col-md-3">
                 <select name="kepada[${index}][jabatan]" class="form-select" required>
@@ -146,18 +156,50 @@
                     <option value="IV/a">IV/a</option>
                 </select>
             </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-danger" onclick="hapusKepada(this)">&times;</button>
+            </div>
         `;
         container.appendChild(row);
 
         const newSelect = row.querySelector('.pegawai-select');
         loadPegawaiDropdown(newSelect, index);
         index++;
+        reindexKepada(); // pastikan nama berurutan
+    }
+
+    function hapusKepada(btn) {
+        const row = btn.closest('.kepada-row');
+        if (row) {
+            row.remove();
+            reindexKepada();
+        }
+    }
+
+    function reindexKepada() {
+        const rows = document.querySelectorAll('#kepada-container .kepada-row');
+        rows.forEach((row, i) => {
+            // update semua name attribute berdasarkan urutan baru
+            const pegawaiSelect = row.querySelector('.pegawai-select');
+            const jabatan = row.querySelector('select[name*="[jabatan]"]');
+            const golongan = row.querySelector('select[name*="[golongan]"]');
+            const nipInput = row.querySelector('input[name*="[nip]"]');
+
+            if (pegawaiSelect) {
+                pegawaiSelect.name = `kepada[${i}][pegawai_id]`;
+                pegawaiSelect.dataset.index = i;
+            }
+            if (nipInput) nipInput.name = `kepada[${i}][nip]`;
+            if (jabatan) jabatan.name = `kepada[${i}][jabatan]`;
+            if (golongan) golongan.name = `kepada[${i}][golongan]`;
+        });
     }
 
     // Inisialisasi pertama kali
     document.addEventListener('DOMContentLoaded', () => {
+        // load dasar tidak perlu apa-apa karena statis
         const select = document.querySelector('.pegawai-select');
-        loadPegawaiDropdown(select, 0);
+        if (select) loadPegawaiDropdown(select, 0);
     });
 
     // SCRIPT TAMBAH DI DASAR
@@ -166,14 +208,34 @@
     function tambahDasar() {
         const container = document.getElementById('dasar-container');
         const row = document.createElement('div');
-        row.classList.add('row', 'mb-2', 'dasar-item');
+        row.classList.add('row', 'mb-2', 'dasar-item', 'align-items-start');
         row.innerHTML = `
-            <div class="col-auto pt-2">${nomorDasar++}.</div>
+            <div class="col-auto pt-2 dasar-number">?</div>
             <div class="col">
                 <textarea name="dasar[]" class="form-control" placeholder="Isi dasar peraturan atau referensi" required></textarea>
             </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-danger" onclick="hapusDasar(this)">&times;</button>
+            </div>
         `;
         container.appendChild(row);
+        updateNomorDasar();
+    }
+
+    function hapusDasar(btn) {
+        const item = btn.closest('.dasar-item');
+        if (item) {
+            item.remove();
+            updateNomorDasar();
+        }
+    }
+
+    function updateNomorDasar() {
+        const items = document.querySelectorAll('#dasar-container .dasar-item');
+        items.forEach((it, idx) => {
+            const num = it.querySelector('.dasar-number');
+            if (num) num.textContent = `${idx + 1}.`;
+        });
     }
 
 </script>
