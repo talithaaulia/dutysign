@@ -14,18 +14,18 @@
 
                 <div class="form-check mb-4">
                     <input class="form-check-input" type="checkbox" name="checklist[]" value="foto_kegiatan" id="fotoKegiatan">
-                    <label class="form-check-label fw-semibold" for="fotoKegiatan">Foto Kegiatan</label>
+                    <label class="form-check-label fw-semibold" for="fotoKegiatan">Foto Kegiatan <span class="text-danger">*</span></label>
                     <br>
                     <p for="foto_kegiatan" class="form-label">Upload Foto Kegiatan</label>
-                    <input type="file" name="foto_kegiatan" class="form-control" accept="image/*">
+                    <input type="file" name="foto_kegiatan" class="form-control" accept="image/*" required>
                 </div>
 
                 <div class="form-check mb-4">
                     <input class="form-check-input" type="checkbox" name="checklist[]" value="scan_hardcopy" id="scanHardcopy">
-                    <label class="form-check-label fw-semibold" for="scanHardcopy">Scan Hardcopy Laporan</label>
+                    <label class="form-check-label fw-semibold" for="scanHardcopy">Scan Hardcopy Laporan <span class="text-danger">*</span></label>
                     <br>
                     <label for="scan_hardcopy" class="form-label">Upload Scan Hardcopy Laporan</label>
-                    <input type="file" name="scan_hardcopy" class="form-control" accept=".pdf,.jpg,.png">
+                    <input type="file" name="scan_hardcopy" class="form-control" accept=".pdf,.jpg,.png" required>
                 </div>
 
                 <div class="form-check mb-4">
