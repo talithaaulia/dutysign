@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SptController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\PegawaiController;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -13,13 +14,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/create', function () {
-    return view('admin.create');
-});
+Route::get('/create', [SptController::class, 'create'])->middleware(['auth']);
 
-Route::get('/list', function () {
-    return view('admin.list');
-});
+Route::get('/list', [SptController::class, 'index'])->middleware(['auth'])->name('spt.index');
 
 Route::get('/upload', function () {
     return view('admin.upload');
@@ -70,6 +67,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('spt', SptController::class)->middleware(['auth']);
+Route::get('/spt/create', [SptController::class, 'create'])->name('spt.create');
 Route::post('/spt', [SptController::class, 'store'])->name('spt.store');
+Route::get('/spt', [SptController::class, 'index'])->name('spt.index');
+Route::get('/spt/{id}', [SptController::class, 'show'])->name('spt.show');
+
+Route::resource('/pegawai', PegawaiController::class);
+Route::resource('/pegawai', PegawaiController::class)->middleware(['auth']);
+Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+Route::get('/pegawai/add', [PegawaiController::class, 'create'])->name('pegawai.add');
+Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
 
 require __DIR__.'/auth.php';
+

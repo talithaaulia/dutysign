@@ -15,7 +15,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Admin',
             'username' => 'admin',
             'email' => 'admin@coba.com', // dummy, ga dipake
             'role' => 'admin',
@@ -23,7 +22,6 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Super Admin',
             'username' => 'superadmin',
             'email' => 'superadmin@coba.com', // dummy, ga dipake
             'role' => 'super_admin',

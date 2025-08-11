@@ -64,6 +64,7 @@
             <a href="/upload" class="{{ request()->is('upload') ? 'active' : '' }}">Upload Surat</a>
             <a href="/report" class="{{ request()->is('report') ? 'active' : '' }}">Input Laporan</a>
             <a href="/view" class="{{ request()->is('view') ? 'active' : '' }}">Lihat Laporan</a>
+            <a href="/pegawai" class="{{ request()->is('pegawai') ? 'active' : '' }}">Data Pegawai</a>
         @elseif(auth()->user()->role == 'super_admin')
             <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="/request" class="{{ request()->is('request') ? 'active' : '' }}">Permintaan Approval</a>

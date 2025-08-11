@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('spts', function (Blueprint $table) {
+        Schema::create('pegawais', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor_surat');
-            $table->text('dasar');
-            $table->text('untuk');
-            $table->date('tanggal');
-            $table->string('ditetapkan_di');
-            $table->enum('status', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
+            $table->string('nama');
+            $table->string('pangkat_gol')->nullable();
+            $table->enum('status_pegawai', ['pns', 'nonpns']);
+            $table->string('nip')->nullable();
+            $table->string('niptt_pk')->nullable();
+            $table->string('jabatan')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('spts');
+        Schema::dropIfExists('pegawais');
     }
 };
