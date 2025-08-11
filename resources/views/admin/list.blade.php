@@ -30,7 +30,7 @@
                         <td>
                             <ul class="mb-0 text-justify">
                                 @foreach($spt->pegawais as $p)
-                                    <li>{{ $p->pivot->nama }} - {{ $p->pivot->jabatan }}</li>
+                                    <li>{{ $p->pivot->nama }}
                                 @endforeach
                             </ul>
                         </td>
