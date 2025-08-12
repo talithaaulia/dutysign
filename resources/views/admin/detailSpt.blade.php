@@ -6,17 +6,28 @@
 
     <div class="card">
         <div class="card-body">
-            <p><strong>Nomor Surat:</strong> 000.1.2.3/4461/107.1/2025</p>
-            <p><strong>Tanggal Surat:</strong> 2025-06-05</p>
+            <p><strong>Nomor Surat:</strong> {{ $spt->nomor_surat }}</p>
+            <p><strong>Tanggal Surat:</strong> {{ $spt->tanggal }}</p>
+
             <p><strong>Kepada:</strong></p>
             <ul>
-                <li>Andi Wijaya - Kasubbag Umum</li>
-                <li>Sri Hidayati - Staf Kepegawaian</li>
+                @foreach($spt->pegawais as $p)
+                    <li>{{ $p->pivot->nama }}</li>
+                @endforeach
             </ul>
-            <p><strong>Status:</strong> <span class="badge bg-success">Disetujui</span></p>
+
+            <p><strong>Status:</strong>
+                @if($spt->status == 'menunggu')
+                    <span class="badge bg-warning">Menunggu</span>
+                @elseif($spt->status == 'disetujui')
+                    <span class="badge bg-success">Disetujui</span>
+                @else
+                    <span class="badge bg-danger">Ditolak</span>
+                @endif
+            </p>
 
             <div class="mt-3">
-                <a href="#" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('spt.index') }}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
     </div>

@@ -34,6 +34,17 @@ Route::get('/detailspt', function () {
     return view('admin.detailSpt');
 });
 
+// Tampilkan form edit
+Route::get('/admin/spt/{id}/edit', [SptController::class, 'edit'])->name('spt.edit');
+
+// Proses update data
+Route::put('/admin/spt/{id}', [SptController::class, 'update'])->name('spt.update');
+
+Route::delete('/spt/{id}', [SptController::class, 'destroy'])->name('spt.destroy');
+
+Route::resource('spt', SptController::class);
+
+
 Route::get('/detailreport', function () {
     return view('admin.detailReport');
 });

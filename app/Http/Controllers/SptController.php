@@ -70,4 +70,37 @@ class SptController extends Controller
     }
 
 
+    public function edit($id)
+{
+    $spt = Spt::with('pegawais')->findOrFail($id);
+    return view('admin.editSpt', compact('spt'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'nomor_surat' => 'required',
+        'tanggal' => 'required|date',
+        'status' => 'required|in:menunggu,disetujui,ditolak',
+    ]);
+
+    $spt = Spt::findOrFail($id);
+    $spt->update([
+        'nomor_surat' => $request->nomor_surat,
+        'tanggal' => $request->tanggal,
+        'status' => $request->status,
+    ]);
+
+    return redirect()->route('spt.index')->with('success', 'SPT berhasil diperbarui.');
+}
+
+    public function destroy($id)
+{
+    Spt::findOrFail($id)->delete();
+    alert()->success('Berhasil', 'Data SPT berhasil dihapus');
+    return redirect()->back();
+}
+
+
+
 }

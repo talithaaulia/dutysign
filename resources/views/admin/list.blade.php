@@ -45,12 +45,13 @@
                         </td>
                         <td>
                             <a href="{{ route('spt.show', $spt->id) }}" class="btn btn-sm btn-primary">Lihat</a>
-                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('spt.destroy', $spt->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('spt.edit', $spt->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ route('spt.destroy', $spt->id) }}" method="POST" class="d-inline delete-confirm">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                             </form>
+
                         </td>
                         <td>
                             -
