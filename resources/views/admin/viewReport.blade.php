@@ -18,31 +18,37 @@
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr>
-                    <td>1</td>
-                    <td>000.4.5.6/7712/109.3/2025</td>
-                    <td>2025-06-17</td>
-                    <td>Andi Wijaya</td>
-                    <td class="text-justify">
-                        <ul>
-                            <li>✔ Foto Kegiatan</li>
-                            <li>✔ Scan Hardcopy</li>
-                            <li>✘ E-Toll</li>
-                            <li>✔ BBM</li>
-                        </ul>
-                    </td>
-                    <td class="text-center">
-                        <a href="/detailreport" class="btn btn-sm btn-info mb-1">Lihat</a>
-                        <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
-                        <form action="#" method="POST" style="display:inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-sm btn-danger" onclick="return confirm('Hapus laporan ini?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
+@forelse ($reports as $index => $report)
+    <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $report->nomor_surat }}</td>
+        <td>{{ $report->tanggal_laporan }}</td>
+        <td>{{ $report->nama_pelapor }}</td>
+        <td class="text-justify">
+            <ul>
+                <li>{{ $report->foto_kegiatan ? '✔ Foto Kegiatan' : '✘ Foto Kegiatan' }}</li>
+                <li>{{ $report->scan_hardcopy ? '✔ Scan Hardcopy' : '✘ Scan Hardcopy' }}</li>
+                <li>{{ $report->e_toll ? '✔ E-Toll' : '✘ E-Toll' }}</li>
+                <li>{{ $report->bbm ? '✔ BBM' : '✘ BBM' }}</li>
+            </ul>
+        </td>
+        <td class="text-center">
+            <a href="/detailreport" class="btn btn-sm btn-info mb-1">Lihat</a>
+            <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
+            <form action="{{ route('report.destroy', $report->id) }}" method="POST" style="display:inline-block">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-sm btn-danger" onclick="return confirm('Hapus laporan ini?')">Hapus</button>
+            </form>
+        </td>
+    </tr>
+@empty
+    <tr>
+        <td colspan="6">Belum ada laporan</td>
+    </tr>
+@endforelse
+</tbody>
 
-            </tbody>
         </table>
     </div>
 </div>

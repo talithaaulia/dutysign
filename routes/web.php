@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SptController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -89,6 +90,11 @@ Route::resource('/pegawai', PegawaiController::class)->middleware(['auth']);
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/pegawai/add', [PegawaiController::class, 'create'])->name('pegawai.add');
 Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+
+Route::get('/report', [ReportController::class, 'create'])->name('report.create');
+Route::post('/report', [ReportController::class, 'store'])->name('report.store');
+Route::get('/view', [ReportController::class, 'index'])->name('report.index');
+Route::delete('/report/{id}', [ReportController::class, 'destroy'])->name('report.destroy');
 
 require __DIR__.'/auth.php';
 

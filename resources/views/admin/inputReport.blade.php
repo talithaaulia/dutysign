@@ -4,7 +4,7 @@
 <div class="container mt-4">
     <h3 class="mb-4">Input Laporan Perjalanan Dinas</h3>
 
-    <form action="#" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('report.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="card shadow-sm mb-4">
