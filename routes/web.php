@@ -19,9 +19,8 @@ Route::get('/create', [SptController::class, 'create'])->middleware(['auth']);
 
 Route::get('/list', [SptController::class, 'index'])->middleware(['auth'])->name('spt.index');
 
-Route::get('/upload', function () {
-    return view('admin.upload');
-});
+Route::get('/upload', [SptController::class, 'uploadForm'])->middleware(['auth'])->name('spt.upload');
+Route::post('/upload', [SptController::class, 'uploadSurat'])->middleware(['auth'])->name('spt.upload.submit');
 
 Route::get('/report', function () {
     return view('admin.inputReport');
@@ -84,6 +83,7 @@ Route::get('/spt/create', [SptController::class, 'create'])->name('spt.create');
 Route::post('/spt', [SptController::class, 'store'])->name('spt.store');
 Route::get('/spt', [SptController::class, 'index'])->name('spt.index');
 Route::get('/spt/{id}', [SptController::class, 'show'])->name('spt.show');
+Route::get('/spt/{id}/download', [SptController::class, 'download'])->name('spt.download');
 
 Route::resource('/pegawai', PegawaiController::class);
 Route::resource('/pegawai', PegawaiController::class)->middleware(['auth']);

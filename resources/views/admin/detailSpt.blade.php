@@ -26,7 +26,17 @@
                 @endif
             </p>
 
-            <div class="mt-3">
+            {{-- yg ini jgn dihapus, bcz penting --}}
+            <td>
+                <strong>Scan Surat (Sudah TTD+Stempel):</strong>
+                <br>
+                @if($spt->file_scan)
+                    <a  href="{{ route('spt.download', $spt->id) }}" download class="btn btn-sm btn-success">Download</a>
+                @else
+                    <span class="text-muted">Belum ada</span>
+                @endif
+            </td>
+            <div class="mt-5">
                 <a href="{{ route('spt.index') }}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
