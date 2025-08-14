@@ -33,14 +33,16 @@
             </ul>
         </td>
         <td class="text-center">
-            <a href="/detailreport" class="btn btn-sm btn-info mb-1">Lihat</a>
-            <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
-            <form action="{{ route('report.destroy', $report->id) }}" method="POST" style="display:inline-block">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-sm btn-danger" onclick="return confirm('Hapus laporan ini?')">Hapus</button>
-            </form>
-        </td>
+    <a href="/detailreport" class="btn btn-sm btn-info mb-1">Lihat</a>
+    <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
+
+    <form action="{{ route('report.destroy', $report->id) }}" method="POST" class="d-inline delete-confirm">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+    </form>
+</td>
+
     </tr>
 @empty
     <tr>

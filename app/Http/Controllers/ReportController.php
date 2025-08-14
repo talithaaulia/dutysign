@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
@@ -52,9 +53,26 @@ class ReportController extends Controller
     }
 
     public function destroy($id)
-    {
-        $report = Report::findOrFail($id);
-        $report->delete();
-        return back()->with('success', 'Laporan berhasil dihapus.');
+{
+    $report = Report::findOrFail($id);
+
+    // Hapus file dari storage jika ada
+    if ($report->foto_kegiatan && Storage::disk('public')->exists($report->foto_kegiatan)) {
+        Storage::disk('public')->delete($report->foto_kegiatan);
     }
+    if ($report->scan_hardcopy && Storage::disk('public')->exists($report->scan_hardcopy)) {
+        Storage::disk('public')->delete($report->scan_hardcopy);
+    }
+    if ($report->e_toll && Storage::disk('public')->exists($report->e_toll)) {
+        Storage::disk('public')->delete($report->e_toll);
+    }
+    if ($report->bbm && Storage::disk('public')->exists($report->bbm)) {
+        Storage::disk('public')->delete($report->bbm);
+    }
+
+    // Hapus dari database
+    $report->delete();
+
+    return redirect()->route('report.index')->with('success', 'Laporan berhasil dihapus.');
+}
 }
