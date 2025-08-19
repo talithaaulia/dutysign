@@ -118,9 +118,10 @@ class SptController extends Controller
         // Simpan file di storage/app/public/surat_scan
         $path = $request->file('file_scan')->store('surat_scan', 'public');
 
-        // Update record
-        $spt->file_scan = $path;
-        $spt->save();
+        $spt->update([
+            'file_scan' => $path,
+            'status' => 'disetujui'
+        ]);
 
         return redirect()->route('spt.index')->with('success', 'Surat scan berhasil diupload');
     }

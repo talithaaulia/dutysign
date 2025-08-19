@@ -17,7 +17,7 @@
             <div class="card text-white bg-primary shadow">
                 <div class="card-body">
                     <h5 class="card-title">Sudah TTD + Stempel</h5>
-                    <p class="card-text fs-4">10</p>
+                    <p class="card-text fs-4">{{ $countSudahTTD }}</p>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <div class="card text-white bg-warning shadow">
                 <div class="card-body">
                     <h5 class="card-title">SPT Menunggu approval</h5>
-                    <p class="card-text fs-4">6</p>
+                    <p class="card-text fs-4">{{ $countMenunggu }}</p>
                 </div>
             </div>
         </div>
@@ -42,43 +42,33 @@
 
                     <form method="GET" action="{{ route('dashboard') }}" class="mb-3">
                         <div class="input-group">
-                            <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Cari nama pegawai...">
+                            <input type="text" name="search" value="{{ $search }}" class="form-control" placeholder="Cari nama pegawai...">
                             <button class="btn btn-primary" type="submit">Cari</button>
                         </div>
                     </form>
 
-                    @php
-                        $search = strtolower(request('search'));
-                        $dummyData = [
-                            ['nama' => 'Ahmad Fauzi', 'jumlah' => 5],
-                            ['nama' => 'Sri Lestari', 'jumlah' => 3],
-                            ['nama' => 'Rina Wijaya', 'jumlah' => 7],
-                        ];
-                        $filteredData = array_filter($dummyData, function($item) use ($search) {
-                            return $search === '' || str_contains(strtolower($item['nama']), $search);
-                        });
-                        $filteredData = array_values($filteredData); // reset index array agar bisa dipakai di loop
-                    @endphp
-
-                    {{-- Tabel hasil pencarian --}}
                     <table class="table table-bordered table-striped">
                         <thead class="table-secondary text-center">
                             <tr>
                                 <th>No</th>
                                 <th>Nama Pegawai</th>
                                 <th>Jumlah Perjalanan Dinas</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($filteredData as $i => $pegawai)
+                            @forelse ($pegawais as $i => $pegawai)
                                 <tr>
                                     <td class="text-center">{{ $i + 1 }}</td>
-                                    <td>{{ $pegawai['nama'] }}</td>
-                                    <td class="text-center">{{ $pegawai['jumlah'] }} kali</td>
+                                    <td>{{ $pegawai->nama }}</td>
+                                    <td class="text-center">{{ $pegawai->spts_count }} kali</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('dashboard.detail', $pegawai->id) }}" class="btn btn-sm btn-warning">Lihat Detail</a>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center text-muted">Tidak ada data yang cocok</td>
+                                    <td colspan="4" class="text-center text-muted">Data tidak ditemukan</td>
                                 </tr>
                             @endforelse
                         </tbody>

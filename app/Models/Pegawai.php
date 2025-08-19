@@ -15,4 +15,13 @@ class Pegawai extends Model
         'jabatan',
     ];
 
+    public function spts(){
+        return $this->hasMany(\App\Models\PegawaiSpt::class);
+    }
+
+    public function sptLangsung(){
+        return $this->belongsToMany(Spt::class, 'pegawai_spt')
+            ->withPivot(['nama', 'pangkat_gol', 'nip', 'niptt_pk', 'jabatan'])
+            ->withTimestamps();
+    }
 }

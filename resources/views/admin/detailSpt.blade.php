@@ -26,7 +26,7 @@
                 @endif
             </p>
 
-            {{-- yg ini jgn dihapus, bcz penting --}}
+            {{-- yg ini tolong jgn dihapus, buat download surat yg udah scanned --}}
             <td>
                 <strong>Scan Surat (Sudah TTD+Stempel):</strong>
                 <br>

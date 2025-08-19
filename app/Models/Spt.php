@@ -23,4 +23,9 @@ class Spt extends Model
             ->withPivot(['nama', 'pangkat_gol', 'nip', 'niptt_pk', 'jabatan',])
             ->withTimestamps();
     }
+
+    public function pegawaiSpt(){
+        return $this->hasMany(PegawaiSpt::class);
+    }
+
 }

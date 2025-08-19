@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SptController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\PegawaiController;
@@ -11,9 +12,9 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+route::get('/dashboard/detail/{id}', [DashboardController::class, 'detail'])->middleware(['auth'])->name('dashboard.detail');
+
 
 Route::get('/create', [SptController::class, 'create'])->middleware(['auth']);
 
