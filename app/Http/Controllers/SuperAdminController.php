@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Spt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,4 +31,31 @@ class SuperAdminController extends Controller
 
         return redirect()->route('superadmin.account')->with('success', 'Akun admin berhasil dibuat.');
     }
+
+    public function index()
+    {
+        $spts = Spt::all(); // ambil semua data SPT
+        return view('superadmin.viewSpt', compact('spts'));
+    }
+
+     public function requestIndex()
+    {
+        // ambil semua data SPT yang butuh approval
+        $spts = Spt::where('status', 'menunggu')->get();
+
+        return view('superadmin.request', compact('spts'));
+    }
+
+    public function setSigner(Request $request, $id)
+{
+    $request->validate([
+        'penandatangan' => 'required|in:kepala,sekretaris'
+    ]);
+
+    $spt = Spt::findOrFail($id);
+    $spt->penandatangan = $request->penandatangan; // pastikan kolom ini ada di tabel spt
+    $spt->save();
+
+    return back()->with('success', 'Penandatangan berhasil diperbarui');
+}
 }

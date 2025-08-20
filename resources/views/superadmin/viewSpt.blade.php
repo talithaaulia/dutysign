@@ -1,72 +1,62 @@
+{{-- resources/views/admin/list.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <h4 class="mb-4">Daftar Semua SPT</h4>
 
-    <div class="mb-3">
-        <a href="#" class="btn btn-primary">Export PDF</a>
-    </div>
-
+        <div class="card shadow-sm">
+        <div class="card-body">
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark text-center">
                 <tr>
-                    <th>No.</th>
+                    <th>No</th>
                     <th>Nomor Surat</th>
-                    <th>Tanggal Surat</th>
+                    <th>Tanggal</th>
                     <th>Kepada</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr>
-                    <td>1</td>
-                    <td>000.1.2.3/4461/107.1/2025</td>
-                    <td>2025-06-05</td>
-                    <td>
-                        <ul class="mb-0 text-justify">
-                            <li>Andi Wijaya - Kasubbag Umum</li>
-                            <li>Sri Hidayati - Staf Kepegawaian</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-sm btn-warning">Lihat Detail</a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>2</td>
-                    <td>000.2.3.4/5562/108.2/2025</td>
-                    <td>2025-07-08</td>
-                    <td>
-                        <ul class="mb-0 text-justify">
-                            <li>Wijaya Andi - Kasubbag Umum</li>
-                            <li>Hidayati Sri - Staf Kepegawaian</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-sm btn-warning">Lihat Detail</a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>3</td>
-                    <td>000.4.5.6/7712/109.3/2025</td>
-                    <td>2025-07-08</td>
-                    <td>
-                        <ul class="mb-0 text-justify">
-                            <li>Andi Wijaya - Kasubbag Umum</li>
-                            <li>Sri Hidayati - Staf Kepegawaian</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-sm btn-warning">Lihat Detail</a>
-                    </td>
-                </tr>
+                @forelse($spts as $index => $spt)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $spt->nomor_surat }}</td>
+                        {{-- <td>{{ \Carbon\Carbon::parse($spt->tanggal)->format('d-m-Y') }}</td> --}}
+                        <td>{{ $spt->tanggal }}</td>
+                        <td>
+                            <ul class="mb-0 text-justify">
+                                @foreach($spt->pegawais as $p)
+                                    <li>{{ $p->pivot->nama }}
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td>
+                            @if($spt->status == 'menunggu')
+                                <span class="badge bg-warning">Menunggu</span>
+                            @elseif($spt->status == 'disetujui')
+                                <span class="badge bg-success">Disetujui</span>
+                            @else
+                                <span class="badge bg-danger">Ditolak</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('spt.show', $spt->id) }}" class="btn btn-sm btn-warning">
+                                Lihat Detail
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5">Belum ada data SPT</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
+    </div>
+    </div>
 </div>
 @endsection
-

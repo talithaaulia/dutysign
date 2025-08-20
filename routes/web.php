@@ -38,20 +38,25 @@ Route::delete('/spt/{id}', [SptController::class, 'destroy'])->name('spt.destroy
 Route::resource('spt', SptController::class);
 
 
+// superadmin lihat semua SPT
+Route::get('/viewSpt', [SuperAdminController::class, 'index'])->name('superadmin.viewSpt.index');
+
+Route::get('/request', [SuperAdminController::class, 'requestIndex'])->name('superadmin.request.requestIndex');
+
+// superadmin request approval spt
+// Route::get('/spt/{id}/preview', [SuperAdminController::class, 'preview'])->name('spt.show');
+Route::post('/spt/{id}/approve', [SptController::class, 'approve'])->name('spt.approve');
+Route::post('/spt/{id}/reject', [SptController::class, 'reject'])->name('spt.reject');
+
+// superadmin penandatangan
+Route::post('/spt/{id}/set-signer', [SuperAdminController::class, 'setSigner'])->name('superadmin.request.setSigner');
+
 Route::get('/detailreport', function () {
     return view('admin.detailReport');
 });
 
 Route::get('/editreport', function () {
     return view('admin.editReport');
-});
-
-Route::get('/request', function () {
-    return view('superadmin.request');
-});
-
-Route::get('/viewSpt', function () {
-    return view('superadmin.viewSpt');
 });
 
 Route::get('/account', function () {
