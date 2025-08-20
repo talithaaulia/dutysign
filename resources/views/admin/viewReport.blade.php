@@ -21,9 +21,13 @@
 @forelse ($reports as $index => $report)
     <tr>
         <td>{{ $index + 1 }}</td>
-        <td>{{ $report->nomor_surat }}</td>
-        <td>{{ $report->tanggal_laporan }}</td>
-        <td>{{ $report->nama_pelapor }}</td>
+        <td>{{ $report->spt->nomor_surat ?? '-' }}</td>
+        <td>{{ $report->spt->tanggal ?? '-' }}</td>
+        <td>
+            @foreach($report->spt->pegawais as $pegawai)
+                {{$pegawai->nama}}
+            @endforeach            
+        </td>
         <td class="text-justify">
             <ul>
                 <li>{{ $report->foto_kegiatan ? '✔ Foto Kegiatan' : '✘ Foto Kegiatan' }}</li>

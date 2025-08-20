@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('spts', function (Blueprint $table) {
-            if (!Schema::hasColumn('spts', 'file_scan')) {
-                $table->string('file_scan')->nullable();
-            }
+        Schema::table('reports', function (Blueprint $table) {
+            $table->unsignedBigInteger('spt_id')->after('id')->nullable();
+            $table->foreign('spt_id')->references('id')->on('spts')->onDelete('cascade');
         });
     }
 
@@ -23,10 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('spts', function (Blueprint $table) {
-            if (Schema::hasColumn('spts', 'file_scan')) {
-                $table->dropColumn('file_scan');
-            }
+        Schema::table('reports', function (Blueprint $table) {
+            //
         });
     }
 };

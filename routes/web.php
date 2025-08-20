@@ -23,14 +23,6 @@ Route::get('/list', [SptController::class, 'index'])->middleware(['auth'])->name
 Route::get('/upload', [SptController::class, 'uploadForm'])->middleware(['auth'])->name('spt.upload');
 Route::post('/upload', [SptController::class, 'uploadSurat'])->middleware(['auth'])->name('spt.upload.submit');
 
-Route::get('/report', function () {
-    return view('admin.inputReport');
-});
-
-Route::get('/view', function () {
-    return view('admin.viewReport');
-});
-
 Route::get('/detailspt', function () {
     return view('admin.detailSpt');
 });

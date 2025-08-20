@@ -10,6 +10,20 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body">
 
+                <h5>Data SPT</h5>
+                <div class="mb-3">
+                    <label for="spt_id" class="form-label">Pilih SPT</label>
+                    <select name="spt_id" id="spt_id" class="form-select" required>
+                        <option value="">-- Pilih SPT --</option>
+                        @foreach (\App\Models\Spt::with('pegawais')->get() as $spt)
+                            <option value="{{  $spt->id }}">
+                                {{ $spt->nomor_surat }} - {{ $spt->tanggal }}
+                                (@foreach ($spt->pegawais as $pegawai) {{ $pegawai->nama }} @endforeach)
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <h5>Checklist Laporan</h5>
 
                 <div class="form-check mb-4">
