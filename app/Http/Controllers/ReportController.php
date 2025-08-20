@@ -49,19 +49,26 @@ class ReportController extends Controller
     }
 
     public function destroy($id)
-{
-    $report = Report::findOrFail($id);
+    {
+        $report = Report::findOrFail($id);
 
-    // Hapus dari storage
-    foreach (['foto_kegiatan', 'scan_hardcopy', 'e_toll', 'bbm'] as $file) {
-        if ($report->$file && Storage::disk('public')->exists($report->$file)) {
-            Storage::disk('public')->delete($report->$file);
+        // Hapus dari storage
+        foreach (['foto_kegiatan', 'scan_hardcopy', 'e_toll', 'bbm'] as $file) {
+            if ($report->$file && Storage::disk('public')->exists($report->$file)) {
+                Storage::disk('public')->delete($report->$file);
+            }
         }
+
+        // Hapus dari database
+        $report->delete();
+
+        return redirect()->route('report.index')->with('success', 'Laporan berhasil dihapus.');
     }
 
-    // Hapus dari database
-    $report->delete();
+    public function show($id)
+    {
+        $report = Report::with(['spt.pegawais'])->findOrFail($id);
+        return view('admin.detailReport', compact('report'));
+    }
 
-    return redirect()->route('report.index')->with('success', 'Laporan berhasil dihapus.');
-}
 }

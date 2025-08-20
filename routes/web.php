@@ -93,6 +93,7 @@ Route::get('/report', [ReportController::class, 'create'])->name('report.create'
 Route::post('/report', [ReportController::class, 'store'])->name('report.store');
 Route::get('/view', [ReportController::class, 'index'])->name('report.index');
 Route::delete('/report/{id}', [ReportController::class, 'destroy'])->name('report.destroy');
+Route::get('/report/{id}', [App\Http\Controllers\ReportController::class, 'show'])->name('report.show');
 
 require __DIR__.'/auth.php';
 

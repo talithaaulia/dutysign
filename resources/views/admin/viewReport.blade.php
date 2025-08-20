@@ -37,7 +37,7 @@
             </ul>
         </td>
         <td class="text-center">
-    <a href="/detailreport" class="btn btn-sm btn-info mb-1">Lihat</a>
+    <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-info mb-1">Lihat</a>
     <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
 
     <form action="{{ route('report.destroy', $report->id) }}" method="POST" class="d-inline delete-confirm">
