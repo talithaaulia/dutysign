@@ -8,6 +8,8 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+        <div class="card shadow-sm">
+        <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered table-striped align-middle">
                 <thead class="table-dark text-center">
@@ -65,5 +67,7 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    </div>
     </div>
 @endsection

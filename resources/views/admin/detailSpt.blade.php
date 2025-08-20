@@ -36,8 +36,12 @@
                     <span class="text-muted">Belum ada</span>
                 @endif
             </td>
-            <div class="mt-5">
-                <a href="{{ route('spt.index') }}" class="btn btn-secondary">Kembali</a>
+            <div class="mt-3">
+                @if(Auth::user()->role === 'super_admin')
+                    <a href="{{ route('superadmin.viewSpt.index') }}" class="btn btn-secondary">Kembali</a>
+                @else
+                    <a href="{{ route('spt.index') }}" class="btn btn-secondary">Kembali</a>
+                @endif
             </div>
         </div>
     </div>
