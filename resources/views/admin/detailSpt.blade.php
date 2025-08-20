@@ -7,7 +7,13 @@
     <div class="card">
         <div class="card-body">
             <p><strong>Nomor Surat:</strong> {{ $spt->nomor_surat }}</p>
-            <p><strong>Tanggal Surat:</strong> {{ $spt->tanggal }}</p>
+
+            <p><strong>Dasar:</strong></p>
+            <ol>
+                @foreach(explode("\n", $spt->dasar) as $d)
+                    <li>{{ $d }}</li>
+                @endforeach
+            </ol>
 
             <p><strong>Kepada:</strong></p>
             <ul>
@@ -15,6 +21,12 @@
                     <li>{{ $p->pivot->nama }}</li>
                 @endforeach
             </ul>
+
+            <p><strong>Untuk:</strong> {{ $spt->untuk }}</p>
+
+            <p><strong>Ditetapkan di:</strong> {{ $spt->ditetapkan_di }}</p>
+
+            <p><strong>Tanggal Surat:</strong> {{ $spt->tanggal }}</p>
 
             <p><strong>Status:</strong>
                 @if($spt->status == 'menunggu')

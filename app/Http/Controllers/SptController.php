@@ -24,7 +24,7 @@ class SptController extends Controller
     public function store(Request $request){
         $validated = $request->validate([
             'nomor_surat' => 'required|string',
-            'dasar' => 'required',
+            'dasar' => 'required|array',            // UPDATED
             'untuk' => 'required|string',
             'tanggal' => 'required|date',
             'kepada' => 'required|array',

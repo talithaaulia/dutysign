@@ -35,8 +35,8 @@
                                 required></textarea>
                         </div>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-outline-danger" onclick="hapusKepada(this)"
-                                aria-label="Hapus Kepada">&times;</button>
+                            <button type="button" class="btn btn-outline-danger" onclick="hapusDasar(this)"
+                                aria-label="Hapus Dasar">&times;</button>
                         </div>
                     </div>
                 </div>
