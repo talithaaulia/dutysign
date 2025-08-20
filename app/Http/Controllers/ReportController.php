@@ -71,4 +71,45 @@ class ReportController extends Controller
         return view('admin.detailReport', compact('report'));
     }
 
+    public function edit($id)
+{
+    $report = Report::findOrFail($id);
+    return view('admin.editReport', compact('report'));
+}
+
+public function update(Request $request, $id)
+{
+    $report = Report::findOrFail($id);
+
+    $request->validate([
+        'foto_kegiatan' => 'nullable|file|mimes:jpg,jpeg,png',
+        'scan_hardcopy' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'e_toll'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'bbm'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+    ]);
+
+    $data = $report->toArray();
+
+    if ($request->hasFile('foto_kegiatan')) {
+        Storage::disk('public')->delete($report->foto_kegiatan);
+        $data['foto_kegiatan'] = $request->file('foto_kegiatan')->store('reports', 'public');
+    }
+    if ($request->hasFile('scan_hardcopy')) {
+        Storage::disk('public')->delete($report->scan_hardcopy);
+        $data['scan_hardcopy'] = $request->file('scan_hardcopy')->store('reports', 'public');
+    }
+    if ($request->hasFile('e_toll')) {
+        if ($report->e_toll) Storage::disk('public')->delete($report->e_toll);
+        $data['e_toll'] = $request->file('e_toll')->store('reports', 'public');
+    }
+    if ($request->hasFile('bbm')) {
+        if ($report->bbm) Storage::disk('public')->delete($report->bbm);
+        $data['bbm'] = $request->file('bbm')->store('reports', 'public');
+    }
+
+    $report->update($data);
+
+    return redirect()->route('report.index')->with('success', 'Laporan berhasil diperbarui!');
+}
+
 }

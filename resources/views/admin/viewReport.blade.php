@@ -4,6 +4,13 @@
 <div class="container mt-4">
     <h3 class="mb-4">Daftar Laporan Perjalanan Dinas</h3>
 
+    @if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
     {{-- Tabel laporan --}}
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
@@ -38,7 +45,7 @@
         </td>
         <td class="text-center">
     <a href="{{ route('report.show', $report->id) }}" class="btn btn-sm btn-info mb-1">Lihat</a>
-    <a href="/editreport" class="btn btn-sm btn-warning mb-1">Edit</a>
+    <a href="{{ route('report.edit', $report->id) }}" class="btn btn-sm btn-warning mb-1">Edit</a>
 
     <form action="{{ route('report.destroy', $report->id) }}" method="POST" class="d-inline delete-confirm">
         @csrf
