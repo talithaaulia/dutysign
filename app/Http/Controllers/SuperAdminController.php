@@ -34,7 +34,7 @@ class SuperAdminController extends Controller
 
     public function index()
     {
-        $spts = Spt::all(); // ambil semua data SPT
+        $spts = Spt::with('pegawais')->latest()->get();     // surat terbaru ada di atas
         return view('superadmin.viewSpt', compact('spts'));
     }
 
@@ -65,7 +65,7 @@ class SuperAdminController extends Controller
     $spt = Spt::findOrFail($id);
     $spt->update(['status' => 'disetujui']);
 
-    return redirect()->route('spt.index')->with('success', 'SPT berhasil disetujui.');
+    return redirect()->route('superadmin.viewSpt.index')->with('success', 'SPT berhasil disetujui.');
 }
 
 public function reject($id)
@@ -73,7 +73,7 @@ public function reject($id)
     $spt = Spt::findOrFail($id);
     $spt->update(['status' => 'ditolak']);
 
-    return redirect()->route('spt.index')->with('success', 'SPT berhasil ditolak.');
+    return redirect()->route('superadmin.viewSpt.index')->with('success', 'SPT berhasil ditolak.');
 }
 
 }

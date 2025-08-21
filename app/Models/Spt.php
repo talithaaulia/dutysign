@@ -16,6 +16,7 @@ class Spt extends Model
         'tanggal',
         'ditetapkan_di',
         'status',
+        'file_scan',
     ];
 
     public function pegawais(){

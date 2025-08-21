@@ -24,7 +24,6 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $spt->nomor_surat }}</td>
-                        {{-- <td>{{ \Carbon\Carbon::parse($spt->tanggal)->format('d-m-Y') }}</td> --}}
                         <td>{{ $spt->tanggal }}</td>
                         <td>
                             <ul class="mb-0 text-justify">
