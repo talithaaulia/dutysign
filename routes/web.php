@@ -50,6 +50,10 @@ Route::post('/spt/{id}/approve', [SuperAdminController::class, 'approve'])
 Route::post('/spt/{id}/reject', [SuperAdminController::class, 'reject'])
     ->name('spt.reject');
 
+    //download dole admin utk spt disetujui
+    Route::get('/spt/{id}/download', [SptController::class, 'download'])->name('spt.download');
+
+
 // superadmin penandatangan
 Route::post('/spt/{id}/set-signer', [SuperAdminController::class, 'setSigner'])->name('superadmin.request.setSigner');
 

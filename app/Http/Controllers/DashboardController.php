@@ -9,6 +9,7 @@ use App\Models\Pegawai;
 class DashboardController extends Controller
 {
     public function index(Request $request){
+        $countDisetujui   = Spt::where('status', 'disetujui')->count();
         $countMenunggu = Spt::where('status', 'menunggu')->count();
         $countSudahTTD = Spt::whereNotNull('file_scan')->count();
 
@@ -24,7 +25,7 @@ class DashboardController extends Controller
         $pegawais = $query->orderBy('nama')->get();
 
         return view(
-            'dashboard', compact('pegawais', 'search', 'countMenunggu', 'countSudahTTD')
+            'dashboard', compact('pegawais', 'search', 'countMenunggu', 'countSudahTTD', 'countDisetujui')
         );
     }
 

@@ -3,12 +3,12 @@
 @section('content')
     <h4 class="mb-4">Dashboard</h4>
 
-    <div class="row">
-        <div class="col-md-3 mb-3">
-            <div class="card text-white bg-success shadow">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-success h-100 shadow">
                 <div class="card-body">
                     <h5 class="card-title">SPT Disetujui</h5>
-                    <p class="card-text fs-4">12</p>
+                    <p class="card-text fs-4">{{ $countDisetujui }}</p>
                 </div>
             </div>
         </div>

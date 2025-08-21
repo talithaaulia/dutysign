@@ -56,7 +56,13 @@
                                 </form>
                             </td>
                             <td>
-                                -
+                                @if($spt->status == 'disetujui')
+                                    <a href="{{ route('spt.download', $spt->id) }}" class="btn btn-success btn-sm">
+                                        Download
+                                    </a>
+                                @else
+                                    -
+                                @endif
                             </td>
                         </tr>
                     @empty

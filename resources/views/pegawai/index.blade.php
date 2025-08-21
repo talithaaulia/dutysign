@@ -5,6 +5,8 @@
     <h3>Daftar Pegawai</h3>
     <a href="{{ route('pegawai.create') }}" class="btn btn-success mb-3">+ Tambah Pegawai</a>
 
+    <div class="card shadow-sm">
+        <div class="card-body">
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -27,5 +29,7 @@
             @endforeach
         </tbody>
     </table>
+</div>
+</div>
 </div>
 @endsection
