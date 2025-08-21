@@ -45,15 +45,19 @@
                                         Preview
                                     </a>
 
-                                    <form action="{{ route('spt.approve', $spt->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-sm">Setujui</button>
-                                    </form>
+                                    <form action="{{ route('spt.approve', $spt->id) }}" method="POST" style="display:inline;"
+                                    onsubmit="confirmation(event, this, 'Setujui SPT?', 'SPT ini akan disetujui.')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm">Setujui</button>
+                                </form>
 
-                                    <form action="{{ route('spt.reject', $spt->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
-                                    </form>
+                                <form action="{{ route('spt.reject', $spt->id) }}" method="POST" style="display:inline;"
+                                    onsubmit="confirmation(event, this, 'Tolak SPT?', 'SPT ini akan ditolak.')">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
+                                </form>
+
+
                                 </div>
                             </td>
                         </tr>

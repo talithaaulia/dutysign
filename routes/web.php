@@ -45,8 +45,10 @@ Route::get('/request', [SuperAdminController::class, 'requestIndex'])->name('sup
 
 // superadmin request approval spt
 // Route::get('/spt/{id}/preview', [SuperAdminController::class, 'preview'])->name('spt.show');
-Route::post('/spt/{id}/approve', [SptController::class, 'approve'])->name('spt.approve');
-Route::post('/spt/{id}/reject', [SptController::class, 'reject'])->name('spt.reject');
+Route::post('/spt/{id}/approve', [SuperAdminController::class, 'approve'])
+    ->name('spt.approve');
+Route::post('/spt/{id}/reject', [SuperAdminController::class, 'reject'])
+    ->name('spt.reject');
 
 // superadmin penandatangan
 Route::post('/spt/{id}/set-signer', [SuperAdminController::class, 'setSigner'])->name('superadmin.request.setSigner');

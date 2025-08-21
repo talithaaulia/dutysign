@@ -58,4 +58,22 @@ class SuperAdminController extends Controller
 
     return back()->with('success', 'Penandatangan berhasil diperbarui');
 }
+
+
+    public function approve($id)
+{
+    $spt = Spt::findOrFail($id);
+    $spt->update(['status' => 'disetujui']);
+
+    return redirect()->route('spt.index')->with('success', 'SPT berhasil disetujui.');
+}
+
+public function reject($id)
+{
+    $spt = Spt::findOrFail($id);
+    $spt->update(['status' => 'ditolak']);
+
+    return redirect()->route('spt.index')->with('success', 'SPT berhasil ditolak.');
+}
+
 }
