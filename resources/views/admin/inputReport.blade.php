@@ -27,7 +27,6 @@
                 <h5>Checklist Laporan</h5>
 
                 <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="foto_kegiatan" id="fotoKegiatan">
                     <label class="form-check-label fw-semibold" for="fotoKegiatan">Foto Kegiatan <span class="text-danger">*</span></label>
                     <br>
                     <p for="foto_kegiatan" class="form-label">Upload Foto Kegiatan</label>
@@ -35,7 +34,6 @@
                 </div>
 
                 <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="scan_hardcopy" id="scanHardcopy">
                     <label class="form-check-label fw-semibold" for="scanHardcopy">Scan Hardcopy Laporan <span class="text-danger">*</span></label>
                     <br>
                     <label for="scan_hardcopy" class="form-label">Upload Scan Hardcopy Laporan</label>
@@ -43,7 +41,6 @@
                 </div>
 
                 <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="e_toll" id="eToll">
                     <label class="form-check-label fw-semibold" for="eToll">Biaya E-Toll (Jika Ada)</label>
                     <br>
                     <label for="e_toll" class="form-label">Upload Bukti Biaya E-Toll</label>
@@ -51,7 +48,6 @@
                 </div>
 
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="bbm" id="bbm">
                     <label class="form-check-label fw-semibold" for="bbm">Biaya BBM (Jika Ada)</label>
                     <br>
                     <label for="bbm" class="form-label">Upload Bukti Biaya BBM</label>
