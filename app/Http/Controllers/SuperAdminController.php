@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
-    public function create()
-    {
+    public function create(){
         return view('superadmin.account');
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate([
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|unique:users,email',
@@ -32,48 +30,43 @@ class SuperAdminController extends Controller
         return redirect()->route('superadmin.account')->with('success', 'Akun admin berhasil dibuat.');
     }
 
-    public function index()
-    {
+    public function index(){
         $spts = Spt::with('pegawais')->latest()->get();     // surat terbaru ada di atas
         return view('superadmin.viewSpt', compact('spts'));
     }
 
-     public function requestIndex()
-    {
+     public function requestIndex(){
         // ambil semua data SPT yang butuh approval
-        $spts = Spt::where('status', 'menunggu')->get();
+        $spts = Spt::where('status', 'menunggu')->latest()->get();
 
         return view('superadmin.request', compact('spts'));
     }
 
-    public function setSigner(Request $request, $id)
-{
-    $request->validate([
-        'penandatangan' => 'required|in:kepala,sekretaris'
-    ]);
+    public function setSigner(Request $request, $id){
+        $validated = $request->validate([
+            'penandatangan' => 'nullable|in:kepala, sekretaris'
+        ]);
 
-    $spt = Spt::findOrFail($id);
-    $spt->penandatangan = $request->penandatangan; // pastikan kolom ini ada di tabel spt
-    $spt->save();
+        $spt = Spt::findOrFail($id);
+        $spt->penandatangan = $validated['penandatangan'];
+        $spt->save();
 
-    return back()->with('success', 'Penandatangan berhasil diperbarui');
-}
+        return back()->with('success', 'Penandatangan berhasil diperbarui');
+    }
 
 
-    public function approve($id)
-{
-    $spt = Spt::findOrFail($id);
-    $spt->update(['status' => 'disetujui']);
+    public function approve($id){
+        $spt = Spt::findOrFail($id);
+        $spt->update(['status' => 'disetujui']);
 
-    return redirect()->route('superadmin.viewSpt.index')->with('success', 'SPT berhasil disetujui.');
-}
+        return redirect()->route('superadmin.viewSpt.index')->with('success', 'SPT berhasil disetujui.');
+    }
 
-public function reject($id)
-{
-    $spt = Spt::findOrFail($id);
-    $spt->update(['status' => 'ditolak']);
+    public function reject($id){
+        $spt = Spt::findOrFail($id);
+        $spt->update(['status' => 'ditolak']);
 
-    return redirect()->route('superadmin.viewSpt.index')->with('success', 'SPT berhasil ditolak.');
-}
+        return redirect()->route('superadmin.viewSpt.index')->with('success', 'SPT berhasil ditolak.');
+    }
 
 }

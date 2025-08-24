@@ -24,7 +24,7 @@ class SptController extends Controller
     public function store(Request $request){
         $validated = $request->validate([
             'nomor_surat' => 'required|string',
-            'dasar' => 'required|array',            // UPDATED
+            'dasar' => 'required|array',
             'untuk' => 'required|string',
             'tanggal' => 'required|date',
             'kepada' => 'required|array',
@@ -71,26 +71,45 @@ class SptController extends Controller
     }
 
 
-    public function edit($id)
-    {
+    public function edit($id){
         $spt = Spt::with('pegawais')->findOrFail($id);
-        return view('admin.editSpt', compact('spt'));
+        $pegawais = Pegawai::all();
+        return view('admin.editSpt', compact('spt', 'pegawais'));
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $request->validate([
             'nomor_surat' => 'required',
+            'dasar' => 'required|array',
+            'untuk' => 'required|string',
+            'kepada' => 'required|array',
+            'kepada.*.pegawai_id' => 'required|exists:pegawais,id',
+            'kepada.*.pangkat_gol' => 'required|string',
+            'kepada.*.nip' => 'nullable|string',
+            'kepada.*.jabatan' => 'required|string',
+            'ditetapkan_di' => 'required|string',
             'tanggal' => 'required|date',
-            'status' => 'required|in:menunggu,disetujui,ditolak',
         ]);
 
         $spt = Spt::findOrFail($id);
         $spt->update([
             'nomor_surat' => $request->nomor_surat,
+            'dasar' => implode("\n", $request->dasar),
+            'untuk' => $request->untuk,
+            'ditetapkan_di' => $request->ditetapkan_di,
             'tanggal' => $request->tanggal,
-            'status' => $request->status,
         ]);
+
+        $spt->pegawais()->detach();
+        foreach($request->kepada as $kepada){
+            $spt->pegawais()->attach($kepada['pegawai_id'], [
+                'nama'       => \App\Models\Pegawai::find($kepada['pegawai_id'])->nama,
+                'pangkat_gol' => $kepada['pangkat_gol'],
+                'nip' => $kepada['nip'] ?? null,
+                'niptt_pk' => $kepada['niptt_pk'] ?? null,
+                'jabatan' => $kepada['jabatan'],
+            ]);
+        }
 
         return redirect()->route('spt.index')->with('success', 'SPT berhasil diperbarui.');
     }

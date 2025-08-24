@@ -33,7 +33,7 @@
                                 <form action="{{ route('superadmin.request.setSigner', $spt->id) }}" method="POST">
                                     @csrf
                                     <select class="form-select form-select-sm" name="penandatangan" onchange="this.form.submit()">
-                                        <option selected disabled>Pilih</option>
+                                        <option value="" disabled {{ is_null($spt->penandatangan) ? 'selected' : '' }}>Pilih</option>
                                         <option value="kepala" {{ $spt->penandatangan == 'kepala' ? 'selected' : '' }}>Kepala</option>
                                         <option value="sekretaris" {{ $spt->penandatangan == 'sekretaris' ? 'selected' : '' }}>Sekretaris</option>
                                     </select>
