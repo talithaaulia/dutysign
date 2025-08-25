@@ -6,24 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('reports', function (Blueprint $table) {
-            $table->unsignedBigInteger('spt_id')->after('id')->nullable();
+            // Tambahkan kolom relasi ke SPT
+            $table->unsignedBigInteger('spt_id')->nullable()->after('id');
             $table->foreign('spt_id')->references('id')->on('spts')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('reports', function (Blueprint $table) {
-            //
+            $table->dropForeign(['spt_id']);
+            $table->dropColumn('spt_id');
         });
     }
 };

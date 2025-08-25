@@ -11,51 +11,121 @@
         <div class="card shadow-sm mb-4">
             <div class="card-body">
 
-                <h5>Checklist Laporan</h5>
-
-                <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="foto_kegiatan" id="fotoKegiatan"
-                        {{ $report->foto_kegiatan ? 'checked' : '' }}>
-                    <label class="form-check-label fw-semibold" for="fotoKegiatan">Foto Kegiatan <span class="text-danger">*</span></label>
-                    @if($report->foto_kegiatan)
-                        <p>File saat ini: <a href="{{ asset('storage/'.$report->foto_kegiatan) }}" target="_blank">Lihat</a></p>
-                    @endif
-                    <input type="file" name="foto_kegiatan" class="form-control" accept="image/*">
+                <h5>Data Laporan</h5>
+                <div class="mb-3">
+                    <label class="form-label">Dasar</label>
+                    <textarea name="dasar" class="form-control">{{ old('dasar', $report->dasar) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Maksud Tujuan</label>
+                    <textarea name="maksud_tujuan" class="form-control">{{ old('maksud_tujuan', $report->maksud_tujuan) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Waktu Pelaksanaan</label>
+                    <textarea name="waktu_pelaksanaan" class="form-control">{{ old('waktu_pelaksanaan', $report->waktu_pelaksanaan) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nama Petugas</label>
+                    <textarea name="nama_petugas" class="form-control">{{ old('nama_petugas', $report->nama_petugas) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Daerah Tujuan/Instansi yang Dikunjungi</label>
+                    <textarea name="daerah_tujuan" class="form-control">{{ old('daerah_tujuan', $report->daerah_tujuan) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Hadir dalam Pertemuan</label>
+                    <textarea name="hadir" class="form-control">{{ old('hadir', $report->hadir) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Petunjuk/Arahan yang Diberikan</label>
+                    <textarea name="petunjuk" class="form-control">{{ old('petunjuk', $report->petunjuk) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Masalah dan Temuan</label>
+                    <textarea name="masalah" class="form-control">{{ old('masalah', $report->masalah) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Saran dan Tindakan</label>
+                    <textarea name="saran" class="form-control">{{ old('saran', $report->saran) }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Lain-Lain</label>
+                    <textarea name="lain_lain" class="form-control">{{ old('lain_lain', $report->lain_lain) }}</textarea>
                 </div>
 
-                <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="scan_hardcopy" id="scanHardcopy"
-                        {{ $report->scan_hardcopy ? 'checked' : '' }}>
-                    <label class="form-check-label fw-semibold" for="scanHardcopy">Scan Hardcopy Laporan <span class="text-danger">*</span></label>
-                    @if($report->scan_hardcopy)
-                        <p>File saat ini: <a href="{{ asset('storage/'.$report->scan_hardcopy) }}" target="_blank">Lihat</a></p>
-                    @endif
-                    <input type="file" name="scan_hardcopy" class="form-control" accept=".pdf,.jpg,.png">
-                </div>
+                <h5 class="mt-4">Checklist Laporan</h5>
 
-                <div class="form-check mb-4">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="e_toll" id="eToll"
-                        {{ $report->e_toll ? 'checked' : '' }}>
-                    <label class="form-check-label fw-semibold" for="eToll">Biaya E-Toll (Jika Ada)</label>
-                    @if($report->e_toll)
-                        <p>File saat ini: <a href="{{ asset('storage/'.$report->e_toll) }}" target="_blank">Lihat</a></p>
-                    @endif
-                    <input type="file" name="e_toll" class="form-control" accept=".pdf,.jpg,.png">
-                </div>
+{{-- Foto Kegiatan --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold d-block">Foto Kegiatan</label>
+    <div id="foto-kegiatan-wrapper">
+        <div class="input-group mb-2">
+            <input type="file" name="foto_kegiatan[]" class="form-control" accept="image/*">
+            <button type="button" class="btn btn-outline-danger remove-input">x</button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-secondary" onclick="addInput('foto-kegiatan-wrapper','foto_kegiatan[]','image/*')">+ Tambah Foto</button>
+</div>
 
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="checklist[]" value="bbm" id="bbm"
-                        {{ $report->bbm ? 'checked' : '' }}>
-                    <label class="form-check-label fw-semibold" for="bbm">Biaya BBM (Jika Ada)</label>
-                    @if($report->bbm)
-                        <p>File saat ini: <a href="{{ asset('storage/'.$report->bbm) }}" target="_blank">Lihat</a></p>
-                    @endif
-                    <input type="file" name="bbm" class="form-control" accept=".pdf,.jpg,.png">
-                </div>
+{{-- Scan Hardcopy Laporan --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold d-block">Scan Hardcopy Laporan</label>
+    <div id="scan-laporan-wrapper">
+        <div class="input-group mb-2">
+            <input type="file" name="scan_hardcopy[]" class="form-control" accept=".pdf,.jpg,.png">
+            <button type="button" class="btn btn-outline-danger remove-input">x</button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-secondary" onclick="addInput('scan-laporan-wrapper','scan_hardcopy[]','.pdf,.jpg,.png')">+ Tambah Scan</button>
+</div>
+
+{{-- Biaya E-Toll --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold d-block">Biaya E-Toll (Jika Ada)</label>
+    <div id="etoll-wrapper">
+        <div class="input-group mb-2">
+            <input type="file" name="e_toll[]" class="form-control" accept=".pdf,.jpg,.png">
+            <button type="button" class="btn btn-outline-danger remove-input">x</button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-secondary" onclick="addInput('etoll-wrapper','e_toll[]','.pdf,.jpg,.png')">+ Tambah E-Toll</button>
+</div>
+
+{{-- Biaya BBM --}}
+<div class="mb-3">
+    <label class="form-label fw-semibold d-block">Biaya BBM (Jika Ada)</label>
+    <div id="bbm-wrapper">
+        <div class="input-group mb-2">
+            <input type="file" name="bbm[]" class="form-control" accept=".pdf,.jpg,.png">
+            <button type="button" class="btn btn-outline-danger remove-input">x</button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-sm btn-secondary" onclick="addInput('bbm-wrapper','bbm[]','.pdf,.jpg,.png')">+ Tambah BBM</button>
+</div>
+
+{{-- Script Dinamis --}}
+<script>
+    function addInput(wrapperId, name, accept, required = false) {
+        const wrapper = document.getElementById(wrapperId);
+        const div = document.createElement('div');
+        div.classList.add('input-group','mb-2');
+        div.innerHTML = `
+            <input type="file" name="${name}" class="form-control" accept="${accept}" ${required ? 'required' : ''}>
+            <button type="button" class="btn btn-outline-danger remove-input">x</button>
+        `;
+        wrapper.appendChild(div);
+    }
+
+    // event listener global buat tombol hapus
+    document.addEventListener('click', function(e) {
+        if(e.target && e.target.classList.contains('remove-input')) {
+            e.target.parentElement.remove();
+        }
+    });
+</script>
 
                 <button type="submit" class="btn btn-success">Simpan Perubahan</button>
                 <a href="{{ route('report.index') }}" class="btn btn-secondary">Kembali</a>
-
             </div>
         </div>
     </form>

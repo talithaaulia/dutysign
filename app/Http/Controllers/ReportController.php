@@ -20,33 +20,66 @@ class ReportController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'spt_id'        => 'required|exists:spts,id',
-            'foto_kegiatan' => 'required|file|mimes:jpg,jpeg,png',
-            'scan_hardcopy' => 'required|file|mimes:pdf,jpg,jpeg,png',
-            'e_toll'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'bbm'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        ]);
+{
+    $request->validate([
+        'spt_id'          => 'required|exists:spts,id',
+        'foto_kegiatan.*' => 'required|image|mimes:jpg,jpeg,png',
+        'scan_hardcopy.*' => 'required|file|mimes:pdf,jpg,jpeg,png',
+        'e_toll.*'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'bbm.*'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+    ]);
 
-        $data = [
-            'spt_id'        => $request->spt_id,
-            'foto_kegiatan' => $request->file('foto_kegiatan')->store('reports', 'public'),
-            'scan_hardcopy' => $request->file('scan_hardcopy')->store('reports', 'public'),
-        ];
-
-        // File opsional
-        if ($request->hasFile('e_toll')) {
-            $data['e_toll'] = $request->file('e_toll')->store('reports', 'public');
+    // simpan multi file ke storage
+    $fotoKegiatan = [];
+    if ($request->hasFile('foto_kegiatan')) {
+        foreach ($request->file('foto_kegiatan') as $file) {
+            $fotoKegiatan[] = $file->store('reports/foto', 'public');
         }
-        if ($request->hasFile('bbm')) {
-            $data['bbm'] = $request->file('bbm')->store('reports', 'public');
-        }
-
-        Report::create($data);
-
-        return redirect()->route('report.index')->with('success', 'Laporan berhasil disimpan!');
     }
+
+    $scanHardcopy = [];
+    if ($request->hasFile('scan_hardcopy')) {
+        foreach ($request->file('scan_hardcopy') as $file) {
+            $scanHardcopy[] = $file->store('reports/scan', 'public');
+        }
+    }
+
+    $eToll = [];
+    if ($request->hasFile('e_toll')) {
+        foreach ($request->file('e_toll') as $file) {
+            $eToll[] = $file->store('reports/etoll', 'public');
+        }
+    }
+
+    $bbm = [];
+    if ($request->hasFile('bbm')) {
+        foreach ($request->file('bbm') as $file) {
+            $bbm[] = $file->store('reports/bbm', 'public');
+        }
+    }
+
+    Report::create([
+        'spt_id'         => $request->spt_id,
+        'dasar'          => $request->dasar,
+        'maksud_tujuan'  => $request->maksud_tujuan,
+        'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
+        'nama_petugas'   => $request->nama_petugas,
+        'daerah_tujuan'  => $request->daerah_tujuan,
+        'hadir'          => $request->hadir,
+        'petunjuk'       => $request->petunjuk,
+        'masalah'        => $request->masalah,
+        'saran'          => $request->saran,
+        'lain_lain'      => $request->lain_lain,
+        // simpan jadi string dipisahkan koma
+        'foto_kegiatan'  => implode(',', $fotoKegiatan),
+        'scan_hardcopy'  => implode(',', $scanHardcopy),
+        'e_toll'         => implode(',', $eToll),
+        'bbm'            => implode(',', $bbm),
+    ]);
+
+    return redirect()->route('report.index')->with('success', 'Laporan berhasil disimpan!');
+}
+
 
     public function destroy($id)
     {
@@ -66,10 +99,17 @@ class ReportController extends Controller
     }
 
     public function show($id)
-    {
-        $report = Report::with(['spt.pegawais'])->findOrFail($id);
-        return view('admin.detailReport', compact('report'));
-    }
+{
+    $report = Report::with(['spt.pegawais'])->findOrFail($id);
+
+    // Pecah string jadi array
+    $report->foto_kegiatan = $report->foto_kegiatan ? explode(',', $report->foto_kegiatan) : [];
+    $report->scan_hardcopy = $report->scan_hardcopy ? explode(',', $report->scan_hardcopy) : [];
+    $report->e_toll = $report->e_toll ? explode(',', $report->e_toll) : [];
+    $report->bbm = $report->bbm ? explode(',', $report->bbm) : [];
+
+    return view('admin.detailReport', compact('report'));
+}
 
     public function edit($id)
 {
@@ -81,35 +121,71 @@ public function update(Request $request, $id)
 {
     $report = Report::findOrFail($id);
 
+    // validasi → semuanya opsional di update
     $request->validate([
-        'foto_kegiatan' => 'nullable|file|mimes:jpg,jpeg,png',
-        'scan_hardcopy' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        'e_toll'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        'bbm'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png',
+        'scan_hardcopy.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'e_toll.*'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        'bbm.*'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
     ]);
 
-    $data = $report->toArray();
+    // ambil file lama
+    $fotoKegiatan = $report->foto_kegiatan ? explode(',', $report->foto_kegiatan) : [];
+    $scanHardcopy = $report->scan_hardcopy ? explode(',', $report->scan_hardcopy) : [];
+    $eToll        = $report->e_toll ? explode(',', $report->e_toll) : [];
+    $bbm          = $report->bbm ? explode(',', $report->bbm) : [];
 
+    // kalau ada upload baru → tambahkan
     if ($request->hasFile('foto_kegiatan')) {
-        Storage::disk('public')->delete($report->foto_kegiatan);
-        $data['foto_kegiatan'] = $request->file('foto_kegiatan')->store('reports', 'public');
+        foreach ($request->file('foto_kegiatan') as $file) {
+            $fotoKegiatan[] = $file->store('reports/foto', 'public');
+        }
     }
     if ($request->hasFile('scan_hardcopy')) {
-        Storage::disk('public')->delete($report->scan_hardcopy);
-        $data['scan_hardcopy'] = $request->file('scan_hardcopy')->store('reports', 'public');
+        foreach ($request->file('scan_hardcopy') as $file) {
+            $scanHardcopy[] = $file->store('reports/scan', 'public');
+        }
     }
     if ($request->hasFile('e_toll')) {
-        if ($report->e_toll) Storage::disk('public')->delete($report->e_toll);
-        $data['e_toll'] = $request->file('e_toll')->store('reports', 'public');
+        foreach ($request->file('e_toll') as $file) {
+            $eToll[] = $file->store('reports/etoll', 'public');
+        }
     }
     if ($request->hasFile('bbm')) {
-        if ($report->bbm) Storage::disk('public')->delete($report->bbm);
-        $data['bbm'] = $request->file('bbm')->store('reports', 'public');
+        foreach ($request->file('bbm') as $file) {
+            $bbm[] = $file->store('reports/bbm', 'public');
+        }
     }
 
-    $report->update($data);
+    $report->update([
+        'dasar'             => $request->dasar,
+        'maksud_tujuan'     => $request->maksud_tujuan,
+        'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
+        'nama_petugas'      => $request->nama_petugas,
+        'daerah_tujuan'     => $request->daerah_tujuan,
+        'hadir'             => $request->hadir,
+        'petunjuk'          => $request->petunjuk,
+        'masalah'           => $request->masalah,
+        'saran'             => $request->saran,
+        'lain_lain'         => $request->lain_lain,
+        'foto_kegiatan'     => implode(',', $fotoKegiatan),
+        'scan_hardcopy'     => implode(',', $scanHardcopy),
+        'e_toll'            => implode(',', $eToll),
+        'bbm'               => implode(',', $bbm),
+    ]);
 
     return redirect()->route('report.index')->with('success', 'Laporan berhasil diperbarui!');
+}
+
+public function download($folder, $filename)
+{
+    $path = "reports/{$folder}/{$filename}";
+
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    return Storage::disk('public')->download($path);
 }
 
 }

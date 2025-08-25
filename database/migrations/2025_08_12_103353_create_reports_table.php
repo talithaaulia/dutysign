@@ -16,6 +16,18 @@ return new class extends Migration
             $table->date('tanggal_laporan')->nullable();
             $table->string('nama_pelapor')->nullable();
 
+            // Bagian sesuai format laporan
+            $table->text('dasar')->nullable();
+            $table->text('maksud_tujuan')->nullable();
+            $table->text('waktu_pelaksanaan')->nullable();
+            $table->text('nama_petugas')->nullable();
+            $table->text('daerah_tujuan')->nullable();
+            $table->text('hadir')->nullable();
+            $table->longText('petunjuk')->nullable();
+            $table->longText('masalah')->nullable();
+            $table->longText('saran')->nullable();
+            $table->longText('lain_lain')->nullable();
+
             // File laporan
             $table->string('foto_kegiatan'); // wajib
             $table->string('scan_hardcopy'); // wajib
