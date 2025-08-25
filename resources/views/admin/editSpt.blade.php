@@ -154,8 +154,8 @@
                 <div class="col-md-3">
                     <select name="kepada[${index}][pangkat_gol]" class="form-select" required>
                         <option value="">-- Pilih Pangkat/Gol --</option>
-                        @foreach($pegawais as $pegawai)
-                            <option value="{{ $pegawai->pangkat_gol }}">{{ $pegawai->pangkat_gol }}</option>
+                        @foreach($pangkatList as $pangkat)
+                            <option value="{{ $pangkat }}">{{ $pangkat }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -165,8 +165,8 @@
                 <div class="col-md-3">
                     <select name="kepada[${index}][jabatan]" class="form-select" required>
                         <option value="">-- Pilih Jabatan --</option>
-                        @foreach($pegawais as $pegawai)
-                            <option value="{{ $pegawai->jabatan }}">{{ $pegawai->jabatan }}</option>
+                        @foreach($jabatanList as $jabatan)
+                            <option value="{{ $jabatan }}">{{ $jabatan }}</option>
                         @endforeach
                     </select>
                 </div>

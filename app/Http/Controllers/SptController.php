@@ -18,7 +18,11 @@ class SptController extends Controller
 
     public function create(){
         $pegawais = Pegawai::all();
-        return view('admin.create', compact('pegawais'));
+
+        $pangkatList = Pegawai::pluck('pangkat_gol')->unique();
+        $jabatanList = Pegawai::pluck('jabatan')->unique();
+
+        return view('admin.create', compact('pegawais', 'jabatanList', 'pangkatList'));
     }
 
     public function store(Request $request){
@@ -74,7 +78,11 @@ class SptController extends Controller
     public function edit($id){
         $spt = Spt::with('pegawais')->findOrFail($id);
         $pegawais = Pegawai::all();
-        return view('admin.editSpt', compact('spt', 'pegawais'));
+
+        $pangkatList = Pegawai::select('pangkat_gol')->distinct()->pluck('pangkat_gol');
+        $jabatanList = Pegawai::select('jabatan')->distinct()->pluck('jabatan');
+
+        return view('admin.editSpt', compact('spt', 'pegawais', 'jabatanList', 'pangkatList'));
     }
 
     public function update(Request $request, $id){

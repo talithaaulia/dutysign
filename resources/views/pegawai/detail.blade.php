@@ -31,6 +31,11 @@
                 @endforelse
             </tbody>
         </table>
+
+        <div>
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary mt-3">Kembali</a>
+        </div>
     </div>
+
 </div>
 @endsection
