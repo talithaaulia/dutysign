@@ -4,8 +4,8 @@
     <h4 class="mb-4">Dashboard</h4>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="card text-white bg-success h-100 shadow">
+        <div class="col-md-3 mb-3">
+            <div class="card text-white bg-disetujui h-100 shadow">
                 <div class="card-body">
                     <h5 class="card-title">SPT Disetujui</h5>
                     <p class="card-text fs-4">{{ $countDisetujui }}</p>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-md-3 mb-3">
-            <div class="card text-white bg-primary shadow">
+            <div class="card text-white bg-ttd shadow">
                 <div class="card-body">
                     <h5 class="card-title">Sudah TTD + Stempel</h5>
                     <p class="card-text fs-4">{{ $countSudahTTD }}</p>
@@ -23,7 +23,7 @@
         </div>
 
         <div class="col-md-3 mb-3">
-            <div class="card text-white bg-warning shadow">
+            <div class="card text-white bg-menunggu shadow">
                 <div class="card-body">
                     <h5 class="card-title">SPT Menunggu approval</h5>
                     <p class="card-text fs-4">{{ $countMenunggu }}</p>

@@ -25,7 +25,7 @@
                 </h1>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 shadow-md overflow-hidden sm:rounded-lg" style="background-color: #7dd1ff">
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4 shadow-md overflow-hidden sm:rounded-lg" style="background: linear-gradient(45deg, rgba(255,255,255,1) 0%, #3db5f6 50%);">
                 {{ $slot }}
             </div>
         </div>
