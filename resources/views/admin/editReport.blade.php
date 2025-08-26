@@ -14,7 +14,7 @@
                 <h5>Data Laporan</h5>
                 <div class="mb-3">
                     <label class="form-label">Dasar</label>
-                    <textarea name="dasar" class="form-control">{{ old('dasar', $report->dasar) }}</textarea>
+                    <input type="text" class="form-control" value="{{ $report->spt->nomor_surat }}" readonly>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Maksud Tujuan</label>
@@ -25,8 +25,18 @@
                     <textarea name="waktu_pelaksanaan" class="form-control">{{ old('waktu_pelaksanaan', $report->waktu_pelaksanaan) }}</textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Nama Petugas</label>
-                    <textarea name="nama_petugas" class="form-control">{{ old('nama_petugas', $report->nama_petugas) }}</textarea>
+                    <label for="nama_petugas" class="form-label">Nama Petugas</label>
+                    <div class="form-control">
+                        @if($report->spt && $report->spt->pegawais->count())
+                            <ol class="mb-0 ps-3">
+                                @foreach($report->spt->pegawais as $pegawai)
+                                    <li>{{ $pegawai->nama }}</li>
+                                @endforeach
+                            </ol>
+                        @else
+                            <span class="text-muted">Tidak ada petugas</span>
+                        @endif
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Daerah Tujuan/Instansi yang Dikunjungi</label>

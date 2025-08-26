@@ -60,10 +60,8 @@ class ReportController extends Controller
 
     Report::create([
         'spt_id'         => $request->spt_id,
-        'dasar'          => $request->dasar,
         'maksud_tujuan'  => $request->maksud_tujuan,
         'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
-        'nama_petugas'   => $request->nama_petugas,
         'daerah_tujuan'  => $request->daerah_tujuan,
         'hadir'          => $request->hadir,
         'petunjuk'       => $request->petunjuk,
@@ -158,10 +156,8 @@ public function update(Request $request, $id)
     }
 
     $report->update([
-        'dasar'             => $request->dasar,
         'maksud_tujuan'     => $request->maksud_tujuan,
         'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
-        'nama_petugas'      => $request->nama_petugas,
         'daerah_tujuan'     => $request->daerah_tujuan,
         'hadir'             => $request->hadir,
         'petunjuk'          => $request->petunjuk,

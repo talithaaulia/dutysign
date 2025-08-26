@@ -30,9 +30,9 @@
         <td>{{ $index + 1 }}</td>
         <td>{{ $report->spt->nomor_surat ?? '-' }}</td>
         <td>{{ $report->spt->tanggal ?? '-' }}</td>
-        <td>
+        <td class="text-start">
             @foreach($report->spt->pegawais as $pegawai)
-                {{$pegawai->nama}}
+                {{$pegawai->nama}} <br>
             @endforeach            
         </td>
         <td class="text-justify">

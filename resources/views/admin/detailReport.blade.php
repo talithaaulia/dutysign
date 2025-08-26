@@ -8,16 +8,34 @@
         <div class="card-body">
 
             <h5>Data Laporan</h5>
-            <p><strong>Dasar:</strong> {{ $report->dasar }}</p>
+            <div class="mb-3">
+                <label class="form-label"><strong>Dasar:</strong></label>
+                <div class="form-control bg-light">
+                    {{ $report->spt->nomor_surat }}
+                </div>
+            </div>
             <p><strong>Maksud Tujuan:</strong> {{ $report->maksud_tujuan }}</p>
             <p><strong>Waktu Pelaksanaan:</strong> {{ $report->waktu_pelaksanaan }}</p>
-            <p><strong>Nama Petugas:</strong> {{ $report->nama_petugas }}</p>
-            <p><strong>Daerah Tujuan:</strong> {{ $report->daerah_tujuan }}</p>
-            <p><strong>Hadir:</strong> {{ $report->hadir }}</p>
-            <p><strong>Petunjuk:</strong> {{ $report->petunjuk }}</p>
-            <p><strong>Masalah:</strong> {{ $report->masalah }}</p>
-            <p><strong>Saran:</strong> {{ $report->saran }}</p>
-            <p><strong>Lain-lain:</strong> {{ $report->lain_lain }}</p>
+            <div class="mb-3">
+                <label class="form-label"><strong>Nama Petugas:</strong></label>
+                <div class="form-control bg-light">
+                    @if($report->spt && $report->spt->pegawais->count())
+                        <ol class="mb-0 ps-3">
+                            @foreach($report->spt->pegawais as $pegawai)
+                                <li>{{ $pegawai->nama }}</li>
+                            @endforeach
+                        </ol>
+                    @else
+                        <span class="text-muted">Tidak ada petugas</span>
+                    @endif
+                </div>
+            </div>
+            <p><strong>Daerah Tujuan/Instansi yang Dikunjungi:</strong> {{ $report->daerah_tujuan }}</p>
+            <p><strong>Hadir dalam Pertemuan:</strong> {{ $report->hadir }}</p>
+            <p><strong>Petunjuk/Arahan yang Diberikan:</strong> {{ $report->petunjuk }}</p>
+            <p><strong>Masalah dan Temuan:</strong> {{ $report->masalah }}</p>
+            <p><strong>Saran dan Tindakan:</strong> {{ $report->saran }}</p>
+            <p><strong>Lain-Lain:</strong> {{ $report->lain_lain }}</p>
 
             <h5 class="mt-4">Checklist Laporan</h5>
 
