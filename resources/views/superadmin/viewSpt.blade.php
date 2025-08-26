@@ -21,7 +21,11 @@
             </thead>
             <tbody class="text-center">
                 @forelse($spts as $index => $spt)
-                    <tr>
+                    <tr
+            @if($spt->status == 'ditolak')
+                style="border-left: 6px solid red; background-color:#ffecec;"
+            @endif
+        >
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $spt->nomor_surat }}</td>
                         <td>{{ $spt->tanggal }}</td>
