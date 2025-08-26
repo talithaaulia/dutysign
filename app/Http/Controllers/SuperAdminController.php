@@ -37,24 +37,26 @@ class SuperAdminController extends Controller
         return view('superadmin.viewSpt', compact('spts'));
     }
 
-     public function requestIndex(){
-        // ambil semua data SPT yang butuh approval
-        $spts = Spt::where('status', 'menunggu')->latest()->get();
+     public function requestIndex()
+{
+    $spts = Spt::where('status', 'menunggu')->with('penandatangan')->latest()->get();
+    $penandatangans = \App\Models\Penandatangan::all();
 
-        return view('superadmin.request', compact('spts'));
-    }
+    return view('superadmin.request', compact('spts', 'penandatangans'));
+}
 
-    public function setSigner(Request $request, $id){
-        $validated = $request->validate([
-            'penandatangan' => 'nullable|in:kepala, sekretaris'
-        ]);
+    public function setSigner(Request $request, $id)
+{
+    $validated = $request->validate([
+        'penandatangan_id' => 'required|exists:penandatangan,id',
+    ]);
 
-        $spt = Spt::findOrFail($id);
-        $spt->penandatangan = $validated['penandatangan'];
-        $spt->save();
+    $spt = Spt::findOrFail($id);
+    $spt->penandatangan_id = $validated['penandatangan_id']; // simpan foreign key
+    $spt->save();
 
-        return back()->with('success', 'Penandatangan berhasil diperbarui');
-    }
+    return back()->with('success', 'Penandatangan berhasil diperbarui');
+}
 
     public function approve($id){
         $spt = Spt::findOrFail($id);
@@ -72,7 +74,7 @@ class SuperAdminController extends Controller
 
     public function preview($id){
         $spt = Spt::with('pegawais')->findOrFail($id);
-        $spt->signer_data = $spt->getSigner();
+        $spt->signer_data = $spt->penandatangan();
 
         return view('superadmin.preview', compact('spt'));
     }

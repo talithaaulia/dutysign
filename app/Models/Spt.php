@@ -30,24 +30,28 @@ class Spt extends Model
         return $this->hasMany(PegawaiSpt::class);
     }
 
-    public function getSigner(){
+    // public function getSigner(){
 
-        $signers = [
-            'kepala' => [
-                'jabatan' => 'Kepala',
-                'nama'    => 'Dra. Restu Novi Widiani, MM',
-                'pangkat' => 'Pembina Utama Muda',
-                'nip'     => '196611171991032008',
-            ],
-            'sekretaris' => [
-                'jabatan' => 'Sekretaris',
-                'nama'    => 'Yusmanu, S.S.T.',
-                'pangkat' => 'Pembina Tingkat I/(IV/b)',
-                'nip'     => '196808311992011001',
-            ],
-        ];
+    //     $signers = [
+    //         'kepala' => [
+    //             'jabatan' => 'Kepala',
+    //             'nama'    => 'Dra. Restu Novi Widiani, MM',
+    //             'pangkat' => 'Pembina Utama Muda',
+    //             'nip'     => '196611171991032008',
+    //         ],
+    //         'sekretaris' => [
+    //             'jabatan' => 'Sekretaris',
+    //             'nama'    => 'Yusmanu, S.S.T.',
+    //             'pangkat' => 'Pembina Tingkat I/(IV/b)',
+    //             'nip'     => '196808311992011001',
+    //         ],
+    //     ];
 
-        return $this->penandatangan ? $signers[$this->penandatangan] : null;
-    }
+    //     return $this->penandatangan ? $signers[$this->penandatangan] : null;
+    // }
 
+    public function penandatangan()
+{
+    return $this->belongsTo(Penandatangan::class, 'penandatangan_id');
+}
 }

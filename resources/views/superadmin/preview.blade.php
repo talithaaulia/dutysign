@@ -26,12 +26,25 @@
     </div>
 
 {{-- DASAR --}}
-<table class="mb-3" style="width:100%; border-collapse: collapse;">
+{{-- <table class="mb-3" style="width:100%; border-collapse: collapse;">
     <tr>
         <td style="width:120px; vertical-align: top;">DASAR</td>
         <td style="width:10px; vertical-align: top;">:</td>
         <td>
             <ol style="margin:0; padding-left:15px;">
+                @foreach(explode("\n", $spt->dasar) as $d)
+                    <li>{{ $d }}</li>
+                @endforeach
+            </ol>
+        </td>
+    </tr>
+</table> --}}
+
+<table class="mb-3" style="width:100%; border-collapse: collapse;">
+    <tr>
+        <td style="width:120px; vertical-align: top;"><strong>DASAR :</strong></td>
+        <td>
+            <ol style="word-break: break-word; white-space: normal; max-width: 500px; margin:0; padding-left:15px;">
                 @foreach(explode("\n", $spt->dasar) as $d)
                     <li>{{ $d }}</li>
                 @endforeach
@@ -46,7 +59,7 @@
 </div>
 
 {{-- KEPADA --}}
-<table class="mb-3" style="width:100%; border-collapse: collapse;">
+{{-- <table class="mb-3" style="width:100%; border-collapse: collapse;">
     <tr>
         <td style="width:120px; vertical-align: top;">KEPADA</td>
         <td style="width:10px; vertical-align: top;">:</td>
@@ -89,10 +102,10 @@
             </ol>
         </td>
     </tr>
-</table>
+</table> --}}
 
 {{-- UNTUK --}}
-<table class="mb-3" style="width:100%; border-collapse: collapse;">
+{{-- <table class="mb-3" style="width:100%; border-collapse: collapse;">
     <tr>
         <td style="width:120px; vertical-align: top;">UNTUK</td>
         <td style="width:10px; vertical-align: top;">:</td>
@@ -100,11 +113,11 @@
             {!! nl2br(e($spt->untuk)) !!}
         </td>
     </tr>
-</table>
+</table> --}}
 
 
     {{-- Tanggal & Tempat --}}
-    <div class="text-end mt-5">
+    {{-- <div class="text-end mt-5">
         <table style="margin-left: auto; text-align: left;">
             <tr>
                 <td style="padding-right: 10px;">Ditetapkan di</td>
@@ -120,10 +133,10 @@
                     Provinsi Jawa Timur <br>
                     {{ $spt->signer_data['jabatan'] ?? '[Jabatan]' }}
                 </td>
-            </tr>
+            </tr> --}}
 
             {{-- spasi ttd --}}
-            <tr><td colspan="2" style="padding: 50px 0;"></td></tr>
+            {{-- <tr><td colspan="2" style="padding: 50px 0;"></td></tr>
 
             <tr>
                 <td colspan="2">
@@ -143,6 +156,59 @@
             </tr>
         </table>
     </div>
+</div> --}}
+
+
+{{-- KEPADA --}}
+<table class="mb-3" style="width:100%; border-collapse: collapse;"">
+    <tr>
+        <td style="width:120px; vertical-align: top;"><strong>KEPADA :</strong></td>
+        <td>
+            <ol style="word-break: break-word; white-space: normal; max-width: 500px; margin:0; padding-left:15px;">
+                @foreach($spt->pegawais as $p)
+                    <li>{{ $p->nama }} - {{ $p->jabatan ?? '-' }}</li>
+                @endforeach
+            </ol>
+        </td>
+    </tr>
+</table>
+
+{{-- UNTUK --}}
+<table class="mb-3" style="width:100%; border-collapse: collapse;">
+    <tr>
+        <td style="width:120px; vertical-align: top;"><strong>UNTUK :</strong></td>
+        <td style="word-break: break-word; white-space: normal; max-width: 500px;">
+            {{ $spt->untuk }}
+        </td>
+    </tr>
+</table>
+
+
+    {{-- Tanggal & Tempat --}}
+<div class="text-end mt-5">
+    <p>
+        Ditetapkan di: {{ $spt->ditetapkan_di }} <br>
+        Pada tanggal: {{ \Carbon\Carbon::parse($spt->tanggal)->translatedFormat('d F Y') }} <br>
+        a.n. Kepala Dinas Sosial <br>
+        Provinsi Jawa Timur <br>
+        @if($spt->penandatangan)
+            {{ $spt->penandatangan->jabatan }}
+        @else
+            [Silakan pilih penandatangan]
+        @endif
+    </p>
+
+    <br><br><br> {{-- Jarak untuk tanda tangan --}}
+
+    @if($spt->penandatangan)
+        <strong><u>{{ $spt->penandatangan->nama }}</u></strong><br>
+        {{ $spt->penandatangan->pangkat_gol }}<br>
+        NIP. {{ $spt->penandatangan->nip }}
+    @else
+        ______________________ <br>
+        Pangkat/Gol: __________ <br>
+        NIP. __________
+    @endif
 </div>
 
 <div class="mt-5">

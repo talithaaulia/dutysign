@@ -111,7 +111,7 @@ class SptController extends Controller
         $spt->pegawais()->detach();
         foreach($request->kepada as $kepada){
             $spt->pegawais()->attach($kepada['pegawai_id'], [
-                'nama'       => \App\Models\Pegawai::find($kepada['pegawai_id'])->nama,
+                'nama'       => Pegawai::find($kepada['pegawai_id'])->nama,
                 'pangkat_gol' => $kepada['pangkat_gol'],
                 'nip' => $kepada['nip'] ?? null,
                 'niptt_pk' => $kepada['niptt_pk'] ?? null,
@@ -170,4 +170,7 @@ class SptController extends Controller
         return response()->download($path, $filename);
 
     }
+
+
+
 }

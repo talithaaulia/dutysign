@@ -32,10 +32,13 @@
                             <td>
                                 <form action="{{ route('superadmin.request.setSigner', $spt->id) }}" method="POST">
                                     @csrf
-                                    <select class="form-select form-select-sm" name="penandatangan" onchange="this.form.submit()">
-                                        <option value="" disabled {{ is_null($spt->penandatangan) ? 'selected' : '' }}>Pilih</option>
-                                        <option value="kepala" {{ $spt->penandatangan == 'kepala' ? 'selected' : '' }}>Kepala</option>
-                                        <option value="sekretaris" {{ $spt->penandatangan == 'sekretaris' ? 'selected' : '' }}>Sekretaris</option>
+                                    <select class="form-select form-select-sm" name="penandatangan_id" onchange="this.form.submit()">
+                                        <option value="" disabled {{ is_null($spt->penandatangan_id) ? 'selected' : '' }}>Pilih</option>
+                                        @foreach($penandatangans as $pen)
+                                            <option value="{{ $pen->id }}" {{ $spt->penandatangan_id == $pen->id ? 'selected' : '' }}>
+                                                {{ $pen->jabatan }} - {{ $pen->nama }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </form>
                             </td>
