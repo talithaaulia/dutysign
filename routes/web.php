@@ -101,6 +101,8 @@ Route::delete('/report/{id}', [ReportController::class, 'destroy'])->name('repor
 Route::get('/report/{id}', [App\Http\Controllers\ReportController::class, 'show'])->name('report.show');
 Route::get('/report/{id}/edit', [ReportController::class, 'edit'])->name('report.edit');
 Route::put('/report/{id}', [ReportController::class, 'update'])->name('report.update');
+Route::get('/report/download/{folder}/{filename}', [ReportController::class, 'download'])
+    ->name('report.download');
 
 require __DIR__.'/auth.php';
 
