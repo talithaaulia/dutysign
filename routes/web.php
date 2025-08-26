@@ -40,8 +40,9 @@ Route::resource('spt', SptController::class);
 
 // superadmin lihat semua SPT
 Route::get('/viewSpt', [SuperAdminController::class, 'index'])->name('superadmin.viewSpt.index');
-
 Route::get('/request', [SuperAdminController::class, 'requestIndex'])->name('superadmin.request.requestIndex');
+Route::get('/superadmin/spt/{id}/preview', [App\Http\Controllers\SuperAdminController::class, 'preview'])->name('superadmin.spt.preview');
+Route::get('/superadmin/spt/{id}/export-word', [App\Http\Controllers\SuperAdminController::class, 'exportWord'])->name('superadmin.spt.exportWord');
 
 // superadmin request approval spt
 // Route::get('/spt/{id}/preview', [SuperAdminController::class, 'preview'])->name('spt.show');
@@ -50,12 +51,21 @@ Route::post('/spt/{id}/approve', [SuperAdminController::class, 'approve'])
 Route::post('/spt/{id}/reject', [SuperAdminController::class, 'reject'])
     ->name('spt.reject');
 
-    //download dole admin utk spt disetujui
-    Route::get('/spt/{id}/download', [SptController::class, 'download'])->name('spt.download');
+// superadmin buat new acc admin
+Route::get('/account', function () {
+    return view('superadmin.account');
+});
 
+Route::middleware('superadmin')->group(function () {
+    Route::get('/superadmin/account', [SuperAdminController::class, 'create'])->name('superadmin.account');
+    Route::post('/superadmin/account', [SuperAdminController::class, 'store'])->name('superadmin.registerAdmin');
+});
 
 // superadmin penandatangan
 Route::post('/spt/{id}/set-signer', [SuperAdminController::class, 'setSigner'])->name('superadmin.request.setSigner');
+
+//download dole admin utk spt disetujui
+Route::get('/spt/{id}/download', [SptController::class, 'download'])->name('spt.download');
 
 Route::get('/detailreport', function () {
     return view('admin.detailReport');
@@ -63,17 +73,6 @@ Route::get('/detailreport', function () {
 
 Route::get('/editreport', function () {
     return view('admin.editReport');
-});
-
-Route::get('/account', function () {
-    return view('superadmin.account');
-});
-
-    Route::middleware('superadmin')->group(function () {
-        Route::get('/superadmin/account', [SuperAdminController::class, 'create'])
-            ->name('superadmin.account');
-        Route::post('/superadmin/account', [SuperAdminController::class, 'store'])
-            ->name('superadmin.registerAdmin');
 });
 
 Route::middleware('auth')->group(function () {
@@ -102,7 +101,6 @@ Route::delete('/report/{id}', [ReportController::class, 'destroy'])->name('repor
 Route::get('/report/{id}', [App\Http\Controllers\ReportController::class, 'show'])->name('report.show');
 Route::get('/report/{id}/edit', [ReportController::class, 'edit'])->name('report.edit');
 Route::put('/report/{id}', [ReportController::class, 'update'])->name('report.update');
-Route::get('/report/download/{folder}/{filename}', [ReportController::class, 'download'])->name('report.download');
 
 require __DIR__.'/auth.php';
 

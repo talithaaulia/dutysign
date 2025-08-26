@@ -170,7 +170,4 @@ class SptController extends Controller
         return response()->download($path, $filename);
 
     }
-
-
-
 }
