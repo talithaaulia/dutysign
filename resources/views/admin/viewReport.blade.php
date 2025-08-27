@@ -50,7 +50,7 @@
     <form action="{{ route('report.destroy', $report->id) }}" method="POST" class="d-inline delete-confirm">
         @csrf
         @method('DELETE')
-        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+        <button type="submit" class="btn btn-sm btn-danger mb-1">Hapus</button>
     </form>
 </td>
 

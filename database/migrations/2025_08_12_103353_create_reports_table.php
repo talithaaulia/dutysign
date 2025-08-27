@@ -11,6 +11,8 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedBigInteger('spt_id'); // relasi ke tabel spts
+
             // Data identitas laporan
             $table->string('nomor_surat')->nullable();
             $table->date('tanggal_laporan')->nullable();

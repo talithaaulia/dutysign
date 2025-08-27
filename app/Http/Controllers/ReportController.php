@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 
 class ReportController extends Controller
 {
@@ -183,5 +185,70 @@ public function download($folder, $filename)
 
     return Storage::disk('public')->download($path);
 }
+
+public function exportWord($id)
+{
+    $report = Report::with('spt.pegawais')->findOrFail($id);
+
+    $phpWord = new \PhpOffice\PhpWord\PhpWord();
+    $section = $phpWord->addSection();
+
+    // Judul
+    $section->addText(
+        'LAPORAN PERJALANAN DINAS',
+        ['bold' => true, 'size' => 14],
+        ['alignment' => 'center']
+    );
+    $section->addTextBreak(1);
+
+    // Data laporan dalam table tanpa border
+    $tableStyle = ['borderSize' => 0, 'cellMargin' => 50];
+    $phpWord->addTableStyle('ReportTable', $tableStyle);
+    $table = $section->addTable('ReportTable');
+
+    $items = [
+        'I.'  => ['DASAR', $report->spt->nomor_surat ?? '-'],
+        'II.' => ['MAKSUD TUJUAN', $report->maksud_tujuan ?? '-'],
+        'III.' => ['WAKTU PELAKSANAAN', $report->waktu_pelaksanaan ?? '-'],
+        'IV.' => ['NAMA PETUGAS', $report->spt->pegawais->pluck('nama')->implode("\n")],
+        'V.' => ['DAERAH TUJUAN/INSTANSI YANG DIKUNJUNGI', $report->daerah_tujuan ?? '-'],
+        'VI.' => ['HADIR DALAM PERTEMUAN', $report->hadir ?? '-'],
+        'VII.' => ['PETUNJUK/ARAHAN YANG DIBERIKAN', $report->petunjuk ?? '-'],
+        'VIII.' => ['MASALAH DAN TEMUAN', $report->masalah ?? '-'],
+        'IX.' => ['SARAN DAN TINDAKAN', $report->saran ?? '-'],
+        'X.' => ['LAIN-LAIN', $report->lain_lain ?? '-'],
+    ];
+
+    foreach ($items as $no => [$judul, $isi]) {
+        $table->addRow();
+        $table->addCell(1000)->addText($no, [], ['valign' => 'top']);
+        $table->addCell(4000)->addText($judul, [], ['valign' => 'top']);
+        $table->addCell(300)->addText(':', [], ['valign' => 'top']);
+        $table->addCell(7000)->addText($isi, [], ['valign' => 'top']);
+    }
+
+    // Penutup / tanda tangan
+    $section->addTextBreak(2);
+    $section->addText(
+        "Surabaya, " . \Carbon\Carbon::parse($report->created_at)->translatedFormat('d F Y'),
+        [],
+        ['alignment' => 'right']
+    );
+    $section->addText("Pelapor,", [], ['alignment' => 'right']);
+    $section->addTextBreak(3);
+    $section->addText(
+        $report->spt->pegawais->first()->nama ?? '-',
+        ['bold' => true],
+        ['alignment' => 'right']
+    );
+
+    // Simpan & download
+    $fileName = 'Laporan_' . $report->id . '.docx';
+    $tempFile = tempnam(sys_get_temp_dir(), 'word');
+    $phpWord->save($tempFile, 'Word2007');
+
+    return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
+}
+
 
 }

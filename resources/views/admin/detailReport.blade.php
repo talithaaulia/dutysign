@@ -99,7 +99,32 @@
                 @endforelse
             </div>
 
-            <a href="{{ route('report.index') }}" class="btn btn-secondary">Kembali</a>
+            <!-- Tombol Aksi (Kembali & Preview sejajar) -->
+            <div class="d-flex gap-2 mt-4">
+                <a href="#" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</a>
+                <a href="{{ route('report.index') }}" class="btn btn-secondary">Kembali</a>
+            </div>
+
+<!-- Modal Preview -->
+            <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewLabel" aria-hidden="true">
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="previewLabel">Preview Laporan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      {{-- Isi preview di-include --}}
+                      @include('admin.previewReport', ['report' => $report])
+                  </div>
+                  <div class="modal-footer">
+                    <a href="{{ route('report.exportWord', $report->id) }}" class="btn btn-primary">
+                        Export Word
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
     </div>
 </div>
