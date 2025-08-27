@@ -4,6 +4,12 @@
     <div class="container">
         <h3 class="mb-4">Daftar Semua SPT</h3>
 
+        <div class="mb-3">
+            <a href="{{ route('spt.downloadAll') }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-pdf"></i> Download Semua PDF
+            </a>
+        </div>
+
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif

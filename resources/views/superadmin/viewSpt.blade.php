@@ -5,6 +5,12 @@
 <div class="container">
     <h4 class="mb-4">Daftar Semua SPT</h4>
 
+    <div class="mb-3">
+            <a href="{{ route('spt.downloadAll') }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-pdf"></i> Download Semua PDF
+            </a>
+        </div>
+
         <div class="card shadow-sm">
         <div class="card-body">
     <div class="table-responsive">

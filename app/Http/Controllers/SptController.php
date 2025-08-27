@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Spt;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Pegawai;
 use App\Models\PegawaiSpt;
 
@@ -171,6 +172,16 @@ class SptController extends Controller
 
     }
 
+    public function downloadAll()
+{
+    $spts = Spt::with('pegawais')->get();
+
+    $pdf = Pdf::loadView('admin.pdf_all', compact('spts'))
+          ->setPaper('a4', 'landscape');
+
+
+    return $pdf->download('daftar_spt.pdf');
+}
 
 
 }

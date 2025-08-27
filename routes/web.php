@@ -67,6 +67,10 @@ Route::post('/spt/{id}/set-signer', [SuperAdminController::class, 'setSigner'])-
 //download dole admin utk spt disetujui
 Route::get('/spt/{id}/download', [SptController::class, 'download'])->name('spt.download');
 
+// download list SPT format PDF
+Route::get('/spt/download/all', [SptController::class, 'downloadAll'])->name('spt.downloadAll');
+
+
 Route::get('/detailreport', function () {
     return view('admin.detailReport');
 });
