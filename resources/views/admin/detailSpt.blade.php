@@ -52,18 +52,6 @@
             </div>
 
             <div class="mt-3">
-                <td>
-                    <strong>Surat Yang Telah Disetujui (Dengan Bagan TTD):</strong>
-                    <br>
-                    @if($spt->file_scan)
-                        <a  href="{{ route('spt.download', $spt->id) }}" download class="btn btn-sm btn-success">Download</a>
-                    @else
-                        <span class="text-muted">Belum ada</span>
-                    @endif
-                </td>
-            </div>
-
-            <div class="mt-3">
                 @if(Auth::user()->role === 'super_admin')
                     <a href="{{ route('superadmin.viewSpt.index') }}" class="btn btn-secondary">Kembali</a>
                 @else

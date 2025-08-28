@@ -183,7 +183,10 @@ public function download($folder, $filename)
         abort(404);
     }
 
-    return Storage::disk('public')->download($path);
+    // return Storage::disk('public')->download($path);
+    $file = Storage::disk('public')->path($path);
+
+    return response()->download($file, $filename);
 }
 
 public function exportWord($id)
@@ -202,7 +205,7 @@ public function exportWord($id)
     $section->addTextBreak(1);
 
     // Data laporan dalam table tanpa border
-    $tableStyle = ['borderSize' => 0, 'cellMargin' => 50];
+    $tableStyle = ['cellMargin' => 50];
     $phpWord->addTableStyle('ReportTable', $tableStyle);
     $table = $section->addTable('ReportTable');
 

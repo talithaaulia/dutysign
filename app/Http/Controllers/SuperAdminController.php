@@ -37,26 +37,24 @@ class SuperAdminController extends Controller
         return view('superadmin.viewSpt', compact('spts'));
     }
 
-     public function requestIndex()
-{
-    $spts = Spt::where('status', 'menunggu')->with('penandatangan')->latest()->get();
-    $penandatangans = \App\Models\Penandatangan::all();
+     public function requestIndex(){
+        $spts = Spt::where('status', 'menunggu')->with('penandatangan')->latest()->get();
+        $penandatangans = \App\Models\Penandatangan::all();
 
-    return view('superadmin.request', compact('spts', 'penandatangans'));
-}
+        return view('superadmin.request', compact('spts', 'penandatangans'));
+    }
 
-    public function setSigner(Request $request, $id)
-{
-    $validated = $request->validate([
-        'penandatangan_id' => 'required|exists:penandatangan,id',
-    ]);
+    public function setSigner(Request $request, $id){
+        $validated = $request->validate([
+            'penandatangan_id' => 'required|exists:penandatangan,id',
+        ]);
 
-    $spt = Spt::findOrFail($id);
-    $spt->penandatangan_id = $validated['penandatangan_id']; // simpan foreign key
-    $spt->save();
+        $spt = Spt::findOrFail($id);
+        $spt->penandatangan_id = $validated['penandatangan_id']; // simpan foreign key
+        $spt->save();
 
-    return back()->with('success', 'Penandatangan berhasil diperbarui');
-}
+        return back()->with('success', 'Penandatangan berhasil diperbarui');
+    }
 
     public function approve($id){
         $spt = Spt::findOrFail($id);
@@ -80,46 +78,129 @@ class SuperAdminController extends Controller
     }
 
     public function exportWord($id){
-        $spt = Spt::with('pegawais')->findOrFail($id);
+        $spt = Spt::with(['pegawais', 'penandatangan'])->findOrFail($id);
 
-        $phpWord = new PhpWord();
-        $section = $phpWord->addSection();
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-        $section->addText("PEMERINTAH PROVINSI JAWA TIMUR", ['bold' => true, 'size' => 14], ['alignment' => 'center']);
-        $section->addText("DINAS SOSIAL", ['bold' => true, 'size' => 14], ['alignment' => 'center']);
-        $section->addTextBreak(1);
+        $phpWord->setDefaultFontName('Arial');
+        $phpWord->setDefaultFontSize(11);
 
-        $section->addText("SURAT TUGAS", ['bold' => true, 'underline' => 'single', 'size' => 14], ['alignment' => 'center']);
-        $section->addText("Nomor: {$spt->nomor_surat}", ['size' => 12], ['alignment' => 'center']);
-        $section->addTextBreak(1);
+        $section = $phpWord->addSection([
+            'marginTop'    => 1000,
+            'marginBottom' => 800,
+            'marginLeft'   => 1000,
+            'marginRight'  => 800,
+            'paperSize'    => 'A4',
+        ]);
 
-        $section->addText("DASAR :");
-        foreach (explode("\n", $spt->dasar) as $d) {
-            $section->addListItem($d, 0, ['size' => 12]);
+        // Kop Surat
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell(2000, ['valign' => 'center'])->addImage(public_path('images/logo-dinsos.png'), [
+            'width' => 70,
+            'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER,
+        ]);
+
+        $cell = $table->addCell(10000);
+        $noSpace = ['alignment' => 'center', 'spaceAfter' => 0, 'lineHeight' => 1.0];
+        $cell->addText('PEMERINTAH PROVINSI JAWA TIMUR', ['bold' => true, 'size' => 14], $noSpace);
+        $cell->addText('DINAS SOSIAL', ['bold' => true, 'size' => 14], $noSpace);
+        $cell->addText('Jalan Gayung Kebonsari Nomor 56 B, Gayungan, Surabaya, Jawa Timur 60235', [],  $noSpace);
+        $cell->addText('Telepon (031) 8290734 / 8296515, Laman http://dinsos.jatimprov.go.id', [], $noSpace);
+        $cell->addText('Pos-el dinsosjatim56b@gmail.com', [], $noSpace);
+
+        // Judul Surat
+        $section->addText('SURAT TUGAS', ['bold' => true, 'underline' => 'single', 'size' => 13], ['alignment' => 'center']);
+        $section->addText("NOMOR : " . $spt->nomor_surat, [], ['alignment' => 'center']);
+
+        // DASAR
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell(1500)->addText('DASAR', ['bold' => false], ['alignment' => 'left']);
+        $table->addCell(300)->addText(':');
+        $dasarCell = $table->addCell(12000);
+        $innerTable = $dasarCell->addTable();
+        $list = explode("\n", $spt->dasar);
+        $no = 1;
+        foreach ($list as $d) {
+            $innerTable->addRow();
+            $innerTable->addCell(300)->addText($no . '.', null, [
+                'alignment' => 'left',
+                'spaceAfter' => 0,
+                'lineHeight' => 1.15
+            ]);
+            $innerTable->addCell(11500)->addText($d, null, [
+                'alignment' => 'both',
+                'spaceAfter' => 0,
+                'lineHeight' => 1.15
+            ]);
+            $no++;
         }
 
-        $section->addTextBreak(1);
-        $section->addText("MEMERINTAHKAN:", ['bold' => true, 'alignment' => 'center']);
-        $section->addText("KEPADA :");
+        // MEMERINTAHKAN
+        $section->addText('MEMERINTAHKAN', ['bold' => true], ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceAfter' => 0, 'spaceBefore' => 100]);
+
+        // KEPADA
+        $table = $section->addTable();
+        $table->addRow();
+        $table->addCell(1500)->addText('KEPADA');
+        $table->addCell(300)->addText(':');
+        $cell = $table->addCell(12000);
+
+        $no = 1;
         foreach ($spt->pegawais as $p) {
-            $section->addListItem("{$p->nama} - {$p->jabatan}");
+            $cell->addText($no . '. Nama           : ' . $p->nama, null, [
+                'alignment' => 'both',
+                'spaceAfter' => 0,
+                'lineHeight' => 1.15
+            ]);
+            // NIP
+            $nipText = $p->nip ? "    NIP               : {$p->nip}" : ($p->niptt_pk ? "    NIPTT-PK    : {$p->niptt_pk}" : "    NIP : -");
+            $cell->addText($nipText, null, ['alignment' => 'both', 'spaceAfter' => 0, 'lineHeight' => 1.15]);
+            // Jabatan
+            $cell->addText("    Jabatan        : " . ($p->jabatan ?? "-"), null, ['alignment' => 'both', 'spaceAfter' => 0, 'lineHeight' => 1.15]);
+            // Pangkat/Gol
+            $cell->addText("    Pangkat/Gol : " . ($p->pangkat_gol ?? "-"), null, ['alignment' => 'both', 'spaceAfter' => 0, 'lineHeight' => 1.15]);
+
+            $no++;
         }
 
-        $section->addTextBreak(1);
-        $section->addText("UNTUK :");
-        $section->addText($spt->untuk);
+        // UNTUK
+        $table->addRow();
+        $table->addCell(1500)->addText('UNTUK');
+        $table->addCell(300)->addText(':');
+        $table->addCell(12000)->addText($spt->untuk, [], ['align' => 'both']);
 
-        $section->addTextBreak(2);
-        $section->addText("Ditetapkan di: {$spt->ditetapkan_di}");
-        $section->addText("Pada tanggal: " . \Carbon\Carbon::parse($spt->tanggal)->translatedFormat('d F Y'));
+        // Tempat, tanggal, dan tanda tangan
+        $indent = ['indentation' => ['left' => 6000], 'spaceAfter' => 0];
 
-        $fileName = "SPT-{$spt->nomor_surat}.docx";
+        $section->addText("Ditetapkan di : {$spt->ditetapkan_di}", [], $indent);
+        $section->addText("Pada tanggal : " . \Carbon\Carbon::parse($spt->tanggal)->translatedFormat('d F Y'), [], $indent);
+        $section->addText("a.n. Kepala Dinas Sosial", [], $indent);
+        $section->addText("Provinsi Jawa Timur", [], $indent);
+        if ($spt->penandatangan) {
+            $section->addText($spt->penandatangan->jabatan, [], $indent);
+        }
 
+        $section->addTextBreak(3);
+
+        if ($spt->penandatangan) {
+            $section->addText($spt->penandatangan->nama, ['bold' => false], $indent);
+            $section->addText($spt->penandatangan->pangkat_gol, [], $indent);
+            $section->addText("NIP. " . $spt->penandatangan->nip, [], $indent);
+        } else {
+            $section->addText("____________________", [], $indent);
+            $section->addText("Pangkat/Gol: __________", [], $indent);
+            $section->addText("NIP. __________", [], ['alignment' => 'left', 'spaceAfter' => 0]);
+        }
+
+        // Export
+        $filename = 'Surat_Tugas_' . $spt->nomor_surat . '.docx';
         header("Content-Description: File Transfer");
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-
-        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save("php://output");
+        exit;
     }
 }

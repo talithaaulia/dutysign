@@ -1,6 +1,6 @@
 <div style="max-width: 800px; margin:auto; background: #fff; padding: 40px; border: 1px solid #000;">
 
-    {{-- Kop Surat --}}
+    {{-- KOP SURAY --}}
     <table>
         <tr>
             <td style="width:80px; text-align:center; vertical-align:top;">
@@ -19,106 +19,92 @@
         </tr>
     </table>
 
-    {{-- Judul Surat --}}
+    {{-- JUDUL SURAT --}}
     <div class="text-center mb-4">
         <h5 style="font-weight: bold"><u>SURAT TUGAS</u></h5>
         <p>NOMOR   : {{ $spt->nomor_surat }}</p>
     </div>
 
-{{-- DASAR --}}
-{{-- <table class="mb-3" style="width:100%; border-collapse: collapse;">
-    <tr>
-        <td style="width:120px; vertical-align: top;">DASAR</td>
-        <td style="width:10px; vertical-align: top;">:</td>
-        <td>
-            <ol style="margin:0; padding-left:15px;">
-                @foreach(explode("\n", $spt->dasar) as $d)
-                    <li>{{ $d }}</li>
-                @endforeach
-            </ol>
-        </td>
-    </tr>
-</table> --}}
+    {{-- DASAR --}}
+    <table class="mb-3" style="width:100%; border-collapse: collapse;">
+        <tr>
+            <td style="width:100px; vertical-align: top;">DASAR</td>
+            <td style="width:10px; vertical-align: top;">:</td>
+            <td>
+                <ol style="margin:0; padding-left:15px; text-align: justify;">
+                    @foreach(explode("\n", $spt->dasar) as $d)
+                        <li>{{ $d }}</li>
+                    @endforeach
+                </ol>
+            </td>
+        </tr>
+    </table>
 
-<table class="mb-3" style="width:100%; border-collapse: collapse;">
-    <tr>
-        <td style="width:120px; vertical-align: top;"><strong>DASAR :</strong></td>
-        <td>
-            <ol style="word-break: break-word; white-space: normal; max-width: 500px; margin:0; padding-left:15px;">
-                @foreach(explode("\n", $spt->dasar) as $d)
-                    <li>{{ $d }}</li>
-                @endforeach
-            </ol>
-        </td>
-    </tr>
-</table>
+    {{-- MEMERINTAHKAN --}}
+    <div class="text-center mb-2">
+        <strong>MEMERINTAHKAN</strong>
+    </div>
 
-{{-- MEMERINTAHKAN --}}
-<div class="text-center mb-2">
-    <strong>MEMERINTAHKAN</strong>
-</div>
+    {{-- KEPADA --}}
+    <table class="mb-3" style="width:100%; border-collapse: collapse;">
+        <tr>
+            <td style="width:100px; vertical-align: top;">KEPADA</td>
+            <td style="width:10px; vertical-align: top;">:</td>
+            <td>
+                <ol style="margin:0; padding-left:15px;">
+                    @foreach($spt->pegawais as $p)
+                        <li style="margin-bottom:10px;">
+                            <table style="width:100%; border-collapse: collapse; margin-left:5px;">
+                                <tr>
+                                    <td style="width:90px;">Nama</td>
+                                    <td style="width:10px;">:</td>
+                                    <td>{{ $p->nama }}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if($p->nip)
+                                            NIP
+                                        @elseif($p->niptt_pk)
+                                            NIPTT-PK
+                                        @else
+                                            NIP
+                                        @endif
+                                    </td>
+                                    <td>:</td>
+                                    <td>{{ $p->nip ?? $p->niptt_pk ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Jabatan</td>
+                                    <td>:</td>
+                                    <td>{{ $p->jabatan ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Pangkat/Gol</td>
+                                    <td>:</td>
+                                    <td>{{ $p->pangkat_gol ?? '-' }}</td>
+                                </tr>
+                            </table>
+                        </li>
+                    @endforeach
+                </ol>
+            </td>
+        </tr>
+    </table>
 
-{{-- KEPADA --}}
-{{-- <table class="mb-3" style="width:100%; border-collapse: collapse;">
-    <tr>
-        <td style="width:120px; vertical-align: top;">KEPADA</td>
-        <td style="width:10px; vertical-align: top;">:</td>
-        <td>
-            <ol style="margin:0; padding-left:15px;">
-                @foreach($spt->pegawais as $p)
-                    <li style="margin-bottom:10px;">
-                        <table style="width:100%; border-collapse: collapse; margin-left:5px;">
-                            <tr>
-                                <td style="width:90px;">Nama</td>
-                                <td style="width:10px;">:</td>
-                                <td>{{ $p->nama }}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    @if($p->nip)
-                                        NIP
-                                    @elseif($p->niptt_pk)
-                                        NIPTT-PK
-                                    @else
-                                        NIP
-                                    @endif
-                                </td>
-                                <td>:</td>
-                                <td>{{ $p->nip ?? $p->niptt_pk ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td>Jabatan</td>
-                                <td>:</td>
-                                <td>{{ $p->jabatan ?? '-' }}</td>
-                            </tr>
-                            <tr>
-                                <td>Pangkat/Gol</td>
-                                <td>:</td>
-                                <td>{{ $p->pangkat_gol ?? '-' }}</td>
-                            </tr>
-                        </table>
-                    </li>
-                @endforeach
-            </ol>
-        </td>
-    </tr>
-</table> --}}
+    {{-- UNTUK --}}
+    <table class="mb-3" style="width:100%; border-collapse: collapse;">
+        <tr>
+            <td style="width:100px; vertical-align: top;">UNTUK</td>
+            <td style="width:10px; vertical-align: top;">:</td>
+            <td style="text-align: justify;">
+                {!! nl2br(e($spt->untuk)) !!}
+            </td>
+        </tr>
+    </table>
 
-{{-- UNTUK --}}
-{{-- <table class="mb-3" style="width:100%; border-collapse: collapse;">
-    <tr>
-        <td style="width:120px; vertical-align: top;">UNTUK</td>
-        <td style="width:10px; vertical-align: top;">:</td>
-        <td style="text-align: justify;">
-            {!! nl2br(e($spt->untuk)) !!}
-        </td>
-    </tr>
-</table> --}}
-
-
-    {{-- Tanggal & Tempat --}}
-    {{-- <div class="text-end mt-5">
-        <table style="margin-left: auto; text-align: left;">
+{{-- tanggal & tempat --}}
+    <div class="mt-5" style="text-align: right;">
+        <table style="margin-left: auto; margin-right: 60px; text-align: left;">
             <tr>
                 <td style="padding-right: 10px;">Ditetapkan di</td>
                 <td>: {{ $spt->ditetapkan_di }}</td>
@@ -131,86 +117,47 @@
                 <td colspan="2">
                     a.n. Kepala Dinas Sosial <br>
                     Provinsi Jawa Timur <br>
-                    {{ $spt->signer_data['jabatan'] ?? '[Jabatan]' }}
-                </td>
-            </tr> --}}
-
-            {{-- spasi ttd --}}
-            {{-- <tr><td colspan="2" style="padding: 50px 0;"></td></tr>
-
-            <tr>
-                <td colspan="2">
-                    {{ $spt->signer_data['nama'] ?? '________________' }}
+                    @if($spt->penandatangan)
+                        {{ $spt->penandatangan->jabatan }}
+                    @else
+                        [Silakan pilih penandatangan]
+                    @endif
                 </td>
             </tr>
 
+            <tr><td colspan="2" style="padding: 40px 0;"></td></tr>     {{-- spasi ttd--}}
+
             <tr>
                 <td colspan="2">
-                    {{ $spt->signer_data['pangkat'] ?? '[Pangkat Golongan]' }}
+                    @if($spt->penandatangan)
+                        {{ $spt->penandatangan->nama }}
+                    @else
+                        ______________________
+                    @endif
                 </td>
             </tr>
             <tr>
                 <td colspan="2">
-                    NIP {{ $spt->signer_data['nip'] ??  '________________' }}
+                    @if($spt->penandatangan)
+                        {{ $spt->penandatangan->pangkat_gol }}
+                    @else
+                        Pangkat/Gol: __________
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    @if($spt->penandatangan)
+                        NIP. {{ $spt->penandatangan->nip }}
+                    @else
+                        NIP. __________
+                    @endif
                 </td>
             </tr>
         </table>
     </div>
-</div> --}}
-
-
-{{-- KEPADA --}}
-<table class="mb-3" style="width:100%; border-collapse: collapse;"">
-    <tr>
-        <td style="width:120px; vertical-align: top;"><strong>KEPADA :</strong></td>
-        <td>
-            <ol style="word-break: break-word; white-space: normal; max-width: 500px; margin:0; padding-left:15px;">
-                @foreach($spt->pegawais as $p)
-                    <li>{{ $p->nama }} - {{ $p->jabatan ?? '-' }}</li>
-                @endforeach
-            </ol>
-        </td>
-    </tr>
-</table>
-
-{{-- UNTUK --}}
-<table class="mb-3" style="width:100%; border-collapse: collapse;">
-    <tr>
-        <td style="width:120px; vertical-align: top;"><strong>UNTUK :</strong></td>
-        <td style="word-break: break-word; white-space: normal; max-width: 500px;">
-            {{ $spt->untuk }}
-        </td>
-    </tr>
-</table>
-
-
-    {{-- Tanggal & Tempat --}}
-<div class="text-end mt-5">
-    <p>
-        Ditetapkan di: {{ $spt->ditetapkan_di }} <br>
-        Pada tanggal: {{ \Carbon\Carbon::parse($spt->tanggal)->translatedFormat('d F Y') }} <br>
-        a.n. Kepala Dinas Sosial <br>
-        Provinsi Jawa Timur <br>
-        @if($spt->penandatangan)
-            {{ $spt->penandatangan->jabatan }}
-        @else
-            [Silakan pilih penandatangan]
-        @endif
-    </p>
-
-    <br><br><br> {{-- Jarak untuk tanda tangan --}}
-
-    @if($spt->penandatangan)
-        <strong><u>{{ $spt->penandatangan->nama }}</u></strong><br>
-        {{ $spt->penandatangan->pangkat_gol }}<br>
-        NIP. {{ $spt->penandatangan->nip }}
-    @else
-        ______________________ <br>
-        Pangkat/Gol: __________ <br>
-        NIP. __________
-    @endif
 </div>
 
-<div class="mt-5">
+<div style="text-align: center; margin-top: 20px;">
     <a href="{{ route('superadmin.spt.exportWord', $spt->id) }}" class="btn btn-primary btn-sm">Export Word</a>
 </div>

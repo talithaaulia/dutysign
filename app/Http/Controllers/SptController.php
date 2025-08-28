@@ -165,7 +165,7 @@ class SptController extends Controller
         $extension = pathinfo($spt->file_scan, PATHINFO_EXTENSION);
 
         //  biar nama filenya sama
-        $filename = 'SPT-No. ' . str_replace('/', '_', $spt->nomor_surat) . '.' . $extension;
+        $filename = 'Scan SPT-No. ' . str_replace('/', '_', $spt->nomor_surat) . '.' . $extension;
 
         $path = Storage::disk('public')->path($spt->file_scan);
         return response()->download($path, $filename);
@@ -174,7 +174,7 @@ class SptController extends Controller
 
     public function downloadAll()
 {
-    $spts = Spt::with('pegawais')->get();
+    $spts = Spt::with('pegawais')->latest()->get();
 
     $pdf = Pdf::loadView('admin.pdf_all', compact('spts'))
           ->setPaper('a4', 'landscape');
