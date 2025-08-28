@@ -20,7 +20,6 @@ class PegawaiController extends Controller
         $request->validate([
             'nama' => 'required|string',
             'pangkat_gol' => 'nullable|string',
-            'status_pegawai' => 'required|in:pns,nonpns',
             'nip' => 'nullable|string',
             'niptt_pk' => 'nullable|string',
             'jabatan' => 'nullable|string',
@@ -29,5 +28,32 @@ class PegawaiController extends Controller
         Pegawai::create($request->all());
 
         return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan.');
+    }
+
+    public function edit($id){
+        $pegawai = Pegawai::findOrFail($id);
+        return view('pegawai.edit', compact('pegawai'));
+    }
+
+    public function update(Request $request, $id){
+        $request->validate([
+            'nama' => 'required|string',
+            'pangkat_gol' => 'nullable|string',
+            'nip' => 'nullable|string',
+            'niptt_pk' => 'nullable|string',
+            'jabatan' => 'nullable|string',
+        ]);
+
+        $pegawai = Pegawai::findOrFail($id);
+        $pegawai->update($request->all());
+
+        return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil diperbarui.');
+    }
+
+    public function destroy($id){
+        $pegawai = Pegawai::findOrFail($id);
+        $pegawai->delete();
+
+        return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil dihapus.');
     }
 }

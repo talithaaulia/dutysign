@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('pangkat_gol')->nullable();
-            $table->enum('status_pegawai', ['pns', 'nonpns']);
             $table->string('nip')->nullable();
             $table->string('niptt_pk')->nullable();
             $table->string('jabatan')->nullable();

@@ -27,7 +27,11 @@
                     <label for="file_scan" class="form-label">Upload File</label>
                     <input type="file" name="file_scan" id="file_scan" class="form-control"
                         accept=".pdf,.jpg,.jpeg,.png" required>
-                    <small class="text-muted">Maksimal ukuran file 1MB.</small>
+                    <small class="text-muted">Maksimal ukuran file 1 MB</small>
+                    <br>
+                    <small id="fileError" class="text-danger" style="display: none;">
+                        Ukuran file lebih dari 1 MB! Silakan pilih file lain
+                    </small>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Upload Surat</button>
@@ -35,4 +39,18 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('file_scan').addEventListener('change', function () {
+    let file = this.files[0];
+    let errorMsg = document.getElementById('fileError');
+
+    if (file && file.size > 1024 * 1024) {
+        errorMsg.style.display = "inline";
+        this.value = ""; // reset input
+    } else {
+        errorMsg.style.display = "none";
+    }
+});
+</script>
 @endsection

@@ -12,7 +12,7 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $reports = Report::with(['spt.pegawais'])->latest()->get();
+        $reports = Report::with(['spt.pegawais'])->whereHas('spt')->latest()->get();
         return view('admin.viewReport', compact('reports'));
     }
 
@@ -22,63 +22,63 @@ class ReportController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'spt_id'          => 'required|exists:spts,id',
-        'foto_kegiatan.*' => 'required|image|mimes:jpg,jpeg,png',
-        'scan_hardcopy.*' => 'required|file|mimes:pdf,jpg,jpeg,png',
-        'e_toll.*'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        'bbm.*'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-    ]);
+    {
+        $request->validate([
+            'spt_id'          => 'required|exists:spts,id',
+            'foto_kegiatan.*' => 'required|image|mimes:jpg,jpeg,png',
+            'scan_hardcopy.*' => 'required|file|mimes:pdf,jpg,jpeg,png',
+            'e_toll.*'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'bbm.*'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        ]);
 
-    // simpan multi file ke storage
-    $fotoKegiatan = [];
-    if ($request->hasFile('foto_kegiatan')) {
-        foreach ($request->file('foto_kegiatan') as $file) {
-            $fotoKegiatan[] = $file->store('reports/foto', 'public');
+        // simpan multi file ke storage
+        $fotoKegiatan = [];
+        if ($request->hasFile('foto_kegiatan')) {
+            foreach ($request->file('foto_kegiatan') as $file) {
+                $fotoKegiatan[] = $file->store('reports/foto', 'public');
+            }
         }
-    }
 
-    $scanHardcopy = [];
-    if ($request->hasFile('scan_hardcopy')) {
-        foreach ($request->file('scan_hardcopy') as $file) {
-            $scanHardcopy[] = $file->store('reports/scan', 'public');
+        $scanHardcopy = [];
+        if ($request->hasFile('scan_hardcopy')) {
+            foreach ($request->file('scan_hardcopy') as $file) {
+                $scanHardcopy[] = $file->store('reports/scan', 'public');
+            }
         }
-    }
 
-    $eToll = [];
-    if ($request->hasFile('e_toll')) {
-        foreach ($request->file('e_toll') as $file) {
-            $eToll[] = $file->store('reports/etoll', 'public');
+        $eToll = [];
+        if ($request->hasFile('e_toll')) {
+            foreach ($request->file('e_toll') as $file) {
+                $eToll[] = $file->store('reports/etoll', 'public');
+            }
         }
-    }
 
-    $bbm = [];
-    if ($request->hasFile('bbm')) {
-        foreach ($request->file('bbm') as $file) {
-            $bbm[] = $file->store('reports/bbm', 'public');
+        $bbm = [];
+        if ($request->hasFile('bbm')) {
+            foreach ($request->file('bbm') as $file) {
+                $bbm[] = $file->store('reports/bbm', 'public');
+            }
         }
+
+        Report::create([
+            'spt_id'         => $request->spt_id,
+            'maksud_tujuan'  => $request->maksud_tujuan,
+            'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
+            'daerah_tujuan'  => $request->daerah_tujuan,
+            'hadir'          => $request->hadir,
+            'petunjuk'       => $request->petunjuk,
+            'masalah'        => $request->masalah,
+            'saran'          => $request->saran,
+            'lain_lain'      => $request->lain_lain,
+            // simpan jadi string dipisahkan koma
+            'foto_kegiatan'  => implode(',', $fotoKegiatan),
+            'scan_hardcopy'  => implode(',', $scanHardcopy),
+            'e_toll'         => implode(',', $eToll),
+            'bbm'            => implode(',', $bbm),
+        ]);
+
+        return redirect()->route('report.index')->with('success', 'Laporan berhasil disimpan!');
     }
-
-    Report::create([
-        'spt_id'         => $request->spt_id,
-        'maksud_tujuan'  => $request->maksud_tujuan,
-        'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
-        'daerah_tujuan'  => $request->daerah_tujuan,
-        'hadir'          => $request->hadir,
-        'petunjuk'       => $request->petunjuk,
-        'masalah'        => $request->masalah,
-        'saran'          => $request->saran,
-        'lain_lain'      => $request->lain_lain,
-        // simpan jadi string dipisahkan koma
-        'foto_kegiatan'  => implode(',', $fotoKegiatan),
-        'scan_hardcopy'  => implode(',', $scanHardcopy),
-        'e_toll'         => implode(',', $eToll),
-        'bbm'            => implode(',', $bbm),
-    ]);
-
-    return redirect()->route('report.index')->with('success', 'Laporan berhasil disimpan!');
-}
 
 
     public function destroy($id)
@@ -99,159 +99,164 @@ class ReportController extends Controller
     }
 
     public function show($id)
-{
-    $report = Report::with(['spt.pegawais'])->findOrFail($id);
+    {
+        $report = Report::with(['spt.pegawais'])->findOrFail($id);
 
-    // Pecah string jadi array
-    $report->foto_kegiatan = $report->foto_kegiatan ? explode(',', $report->foto_kegiatan) : [];
-    $report->scan_hardcopy = $report->scan_hardcopy ? explode(',', $report->scan_hardcopy) : [];
-    $report->e_toll = $report->e_toll ? explode(',', $report->e_toll) : [];
-    $report->bbm = $report->bbm ? explode(',', $report->bbm) : [];
+        // Pecah string jadi array
+        $report->foto_kegiatan = $report->foto_kegiatan ? explode(',', $report->foto_kegiatan) : [];
+        $report->scan_hardcopy = $report->scan_hardcopy ? explode(',', $report->scan_hardcopy) : [];
+        $report->e_toll = $report->e_toll ? explode(',', $report->e_toll) : [];
+        $report->bbm = $report->bbm ? explode(',', $report->bbm) : [];
 
-    return view('admin.detailReport', compact('report'));
-}
+        return view('admin.detailReport', compact('report'));
+    }
 
     public function edit($id)
-{
-    $report = Report::findOrFail($id);
-    return view('admin.editReport', compact('report'));
-}
+    {
+        $report = Report::findOrFail($id);
+        return view('admin.editReport', compact('report'));
+    }
 
-public function update(Request $request, $id)
-{
-    $report = Report::findOrFail($id);
+    public function update(Request $request, $id)
+    {
+        $report = Report::findOrFail($id);
 
-    // validasi → semuanya opsional di update
-    $request->validate([
-        'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png',
-        'scan_hardcopy.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        'e_toll.*'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-        'bbm.*'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-    ]);
+        // validasi → semuanya opsional di update
+        $request->validate([
+            'foto_kegiatan.*' => 'nullable|image|mimes:jpg,jpeg,png',
+            'scan_hardcopy.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'e_toll.*'        => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'bbm.*'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+        ]);
 
-    // ambil file lama
-    $fotoKegiatan = $report->foto_kegiatan ? explode(',', $report->foto_kegiatan) : [];
-    $scanHardcopy = $report->scan_hardcopy ? explode(',', $report->scan_hardcopy) : [];
-    $eToll        = $report->e_toll ? explode(',', $report->e_toll) : [];
-    $bbm          = $report->bbm ? explode(',', $report->bbm) : [];
+        // ambil file lama
+        $fotoKegiatan = $report->foto_kegiatan ? explode(',', $report->foto_kegiatan) : [];
+        $scanHardcopy = $report->scan_hardcopy ? explode(',', $report->scan_hardcopy) : [];
+        $eToll        = $report->e_toll ? explode(',', $report->e_toll) : [];
+        $bbm          = $report->bbm ? explode(',', $report->bbm) : [];
 
-    // kalau ada upload baru → tambahkan
-    if ($request->hasFile('foto_kegiatan')) {
-        foreach ($request->file('foto_kegiatan') as $file) {
-            $fotoKegiatan[] = $file->store('reports/foto', 'public');
+        // kalau ada upload baru → tambahkan
+        if ($request->hasFile('foto_kegiatan')) {
+            foreach ($request->file('foto_kegiatan') as $file) {
+                $fotoKegiatan[] = $file->store('reports/foto', 'public');
+            }
         }
-    }
-    if ($request->hasFile('scan_hardcopy')) {
-        foreach ($request->file('scan_hardcopy') as $file) {
-            $scanHardcopy[] = $file->store('reports/scan', 'public');
+        if ($request->hasFile('scan_hardcopy')) {
+            foreach ($request->file('scan_hardcopy') as $file) {
+                $scanHardcopy[] = $file->store('reports/scan', 'public');
+            }
         }
-    }
-    if ($request->hasFile('e_toll')) {
-        foreach ($request->file('e_toll') as $file) {
-            $eToll[] = $file->store('reports/etoll', 'public');
+        if ($request->hasFile('e_toll')) {
+            foreach ($request->file('e_toll') as $file) {
+                $eToll[] = $file->store('reports/etoll', 'public');
+            }
         }
-    }
-    if ($request->hasFile('bbm')) {
-        foreach ($request->file('bbm') as $file) {
-            $bbm[] = $file->store('reports/bbm', 'public');
+        if ($request->hasFile('bbm')) {
+            foreach ($request->file('bbm') as $file) {
+                $bbm[] = $file->store('reports/bbm', 'public');
+            }
         }
+
+        $report->update([
+            'maksud_tujuan'     => $request->maksud_tujuan,
+            'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
+            'daerah_tujuan'     => $request->daerah_tujuan,
+            'hadir'             => $request->hadir,
+            'petunjuk'          => $request->petunjuk,
+            'masalah'           => $request->masalah,
+            'saran'             => $request->saran,
+            'lain_lain'         => $request->lain_lain,
+            'foto_kegiatan'     => implode(',', $fotoKegiatan),
+            'scan_hardcopy'     => implode(',', $scanHardcopy),
+            'e_toll'            => implode(',', $eToll),
+            'bbm'               => implode(',', $bbm),
+        ]);
+
+        return redirect()->route('report.index')->with('success', 'Laporan berhasil diperbarui!');
     }
 
-    $report->update([
-        'maksud_tujuan'     => $request->maksud_tujuan,
-        'waktu_pelaksanaan' => $request->waktu_pelaksanaan,
-        'daerah_tujuan'     => $request->daerah_tujuan,
-        'hadir'             => $request->hadir,
-        'petunjuk'          => $request->petunjuk,
-        'masalah'           => $request->masalah,
-        'saran'             => $request->saran,
-        'lain_lain'         => $request->lain_lain,
-        'foto_kegiatan'     => implode(',', $fotoKegiatan),
-        'scan_hardcopy'     => implode(',', $scanHardcopy),
-        'e_toll'            => implode(',', $eToll),
-        'bbm'               => implode(',', $bbm),
-    ]);
+    public function download($folder, $filename)
+    {
+        $path = "reports/{$folder}/{$filename}";
 
-    return redirect()->route('report.index')->with('success', 'Laporan berhasil diperbarui!');
-}
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
 
-public function download($folder, $filename)
-{
-    $path = "reports/{$folder}/{$filename}";
+        // return Storage::disk('public')->download($path);
+        $file = Storage::disk('public')->path($path);
 
-    if (!Storage::disk('public')->exists($path)) {
-        abort(404);
+        return response()->download($file, $filename);
     }
 
-    // return Storage::disk('public')->download($path);
-    $file = Storage::disk('public')->path($path);
+    public function exportWord($id)
+    {
+        $spt = Report::findOrFail($id)->spt;
+        $report = Report::with('spt.pegawais')->findOrFail($id);
 
-    return response()->download($file, $filename);
-}
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-public function exportWord($id)
-{
-    $report = Report::with('spt.pegawais')->findOrFail($id);
+        $phpWord->setDefaultFontName('Arial');
+        $phpWord->setDefaultFontSize(12);
 
-    $phpWord = new \PhpOffice\PhpWord\PhpWord();
-    $section = $phpWord->addSection();
+        $section = $phpWord->addSection();
 
-    // Judul
-    $section->addText(
-        'LAPORAN PERJALANAN DINAS',
-        ['bold' => true, 'size' => 14],
-        ['alignment' => 'center']
-    );
-    $section->addTextBreak(1);
+        // Judul
+        $section->addText(
+            'LAPORAN PERJALANAN DINAS',
+            ['bold' => true, 'size' => 14],
+            ['alignment' => 'center']
+        );
+        $section->addTextBreak(1);
 
-    // Data laporan dalam table tanpa border
-    $tableStyle = ['cellMargin' => 50];
-    $phpWord->addTableStyle('ReportTable', $tableStyle);
-    $table = $section->addTable('ReportTable');
+        // Data laporan dalam table tanpa border
+        $tableStyle = ['cellMargin' => 50];
+        $phpWord->addTableStyle('ReportTable', $tableStyle);
+        $table = $section->addTable('ReportTable');
 
-    $items = [
-        'I.'  => ['DASAR', $report->spt->nomor_surat ?? '-'],
-        'II.' => ['MAKSUD TUJUAN', $report->maksud_tujuan ?? '-'],
-        'III.' => ['WAKTU PELAKSANAAN', $report->waktu_pelaksanaan ?? '-'],
-        'IV.' => ['NAMA PETUGAS', $report->spt->pegawais->pluck('nama')->implode("\n")],
-        'V.' => ['DAERAH TUJUAN/INSTANSI YANG DIKUNJUNGI', $report->daerah_tujuan ?? '-'],
-        'VI.' => ['HADIR DALAM PERTEMUAN', $report->hadir ?? '-'],
-        'VII.' => ['PETUNJUK/ARAHAN YANG DIBERIKAN', $report->petunjuk ?? '-'],
-        'VIII.' => ['MASALAH DAN TEMUAN', $report->masalah ?? '-'],
-        'IX.' => ['SARAN DAN TINDAKAN', $report->saran ?? '-'],
-        'X.' => ['LAIN-LAIN', $report->lain_lain ?? '-'],
-    ];
+        $items = [
+            'I.'  => ['DASAR', $report->spt->nomor_surat ?? '-'],
+            'II.' => ['MAKSUD TUJUAN', $report->maksud_tujuan ?? '-'],
+            'III.' => ['WAKTU PELAKSANAAN', $report->waktu_pelaksanaan ?? '-'],
+            'IV.' => ['NAMA PETUGAS', $report->spt->pegawais->pluck('nama')->implode("\n")],
+            'V.' => ['DAERAH TUJUAN/INSTANSI YANG DIKUNJUNGI', $report->daerah_tujuan ?? '-'],
+            'VI.' => ['HADIR DALAM PERTEMUAN', $report->hadir ?? '-'],
+            'VII.' => ['PETUNJUK/ARAHAN YANG DIBERIKAN', $report->petunjuk ?? '-'],
+            'VIII.' => ['MASALAH DAN TEMUAN', $report->masalah ?? '-'],
+            'IX.' => ['SARAN DAN TINDAKAN', $report->saran ?? '-'],
+            'X.' => ['LAIN-LAIN', $report->lain_lain ?? '-'],
+        ];
 
-    foreach ($items as $no => [$judul, $isi]) {
-        $table->addRow();
-        $table->addCell(1000)->addText($no, [], ['valign' => 'top']);
-        $table->addCell(4000)->addText($judul, [], ['valign' => 'top']);
-        $table->addCell(300)->addText(':', [], ['valign' => 'top']);
-        $table->addCell(7000)->addText($isi, [], ['valign' => 'top']);
+        foreach ($items as $no => [$judul, $isi]) {
+            $table->addRow();
+            $table->addCell(1000)->addText($no, [], ['valign' => 'top']);
+            $table->addCell(4000)->addText($judul, [], ['valign' => 'top']);
+            $table->addCell(300)->addText(':', [], ['valign' => 'top']);
+            $table->addCell(7000)->addText($isi, [], ['valign' => 'top']);
+        }
+
+        // Penutup / tanda tangan
+        $section->addTextBreak(2);
+        $section->addText(
+            "Surabaya, " . \Carbon\Carbon::parse($report->created_at)->translatedFormat('d F Y'),
+            [],
+            ['alignment' => 'right']
+        );
+        $section->addText("Pelapor,", [], ['alignment' => 'right']);
+        $section->addTextBreak(3);
+        $section->addText(
+            $report->spt->pegawais->first()->nama ?? '-',
+            ['bold' => true],
+            ['alignment' => 'right']
+        );
+
+        // Simpan & download
+        $fileName = 'Laporan ' . str_replace('/', '_', $spt->nomor_surat) . '.docx';
+        $tempFile = tempnam(sys_get_temp_dir(), 'word');
+        $phpWord->save($tempFile, 'Word2007');
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
-
-    // Penutup / tanda tangan
-    $section->addTextBreak(2);
-    $section->addText(
-        "Surabaya, " . \Carbon\Carbon::parse($report->created_at)->translatedFormat('d F Y'),
-        [],
-        ['alignment' => 'right']
-    );
-    $section->addText("Pelapor,", [], ['alignment' => 'right']);
-    $section->addTextBreak(3);
-    $section->addText(
-        $report->spt->pegawais->first()->nama ?? '-',
-        ['bold' => true],
-        ['alignment' => 'right']
-    );
-
-    // Simpan & download
-    $fileName = 'Laporan_' . $report->id . '.docx';
-    $tempFile = tempnam(sys_get_temp_dir(), 'word');
-    $phpWord->save($tempFile, 'Word2007');
-
-    return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
-}
 
 
 }

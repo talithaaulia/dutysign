@@ -17,15 +17,6 @@
         </div>
 
         <div class="mb-3">
-            <label>Status Pegawai</label>
-            <select name="status_pegawai" class="form-control" required>
-                <option value="pns">-- Pilih --</option>
-                <option value="pns">PNS</option>
-                <option value="nonpns">Non-PNS</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
             <label>NIP (jika PNS)</label>
             <input type="text" name="nip" class="form-control">
         </div>

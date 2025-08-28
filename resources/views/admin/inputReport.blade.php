@@ -94,10 +94,10 @@
 
                 {{-- Scan Hardcopy --}}
                 <div class="mb-3">
-                    <label class="form-label fw-semibold d-block">Scan Hardcopy Laporan <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold d-block">Scan Hardcopy Laporan</label>
                     <div id="scan-laporan-wrapper">
                         <div class="input-group mb-2">
-                            <input type="file" name="scan_hardcopy[]" class="form-control" accept=".pdf,.jpg,.png" required>
+                            <input type="file" name="scan_hardcopy[]" class="form-control" accept=".pdf,.jpg,.png">
                             <button type="button" class="btn btn-outline-danger remove-input">x</button>
                         </div>
                     </div>

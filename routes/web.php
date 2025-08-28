@@ -97,6 +97,8 @@ Route::resource('/pegawai', PegawaiController::class)->middleware(['auth']);
 Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 Route::get('/pegawai/add', [PegawaiController::class, 'create'])->name('pegawai.add');
 Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
 
 Route::get('/report', [ReportController::class, 'create'])->name('report.create');
 Route::post('/report', [ReportController::class, 'store'])->name('report.store');
