@@ -71,6 +71,7 @@
             <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
             <a href="/request" class="{{ request()->is('request') ? 'active' : '' }}">Permintaan Approval</a>
             <a href="/viewSpt" class="{{ request()->is('viewSpt') ? 'active' : '' }}">Lihat Semua SPT</a>
+            <a href="/penandatangan" class="{{ request()->is('penandatangan') ? 'active' : '' }}">Penandatangan</a>
             <a href="/account" class="{{ request()->is('account') ? 'active' : '' }}">Buat Akun</a>
         @endif
         <form method="POST" action="{{ route('logout') }}" class="text-center px-3 mt-3">

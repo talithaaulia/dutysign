@@ -7,6 +7,7 @@ use App\Http\Controllers\SptController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PenandatanganController;
 
 Route::get('/', function () {
     return redirect('/login');
@@ -109,6 +110,13 @@ Route::get('/report/{id}/edit', [ReportController::class, 'edit'])->name('report
 Route::put('/report/{id}', [ReportController::class, 'update'])->name('report.update');
 Route::get('/report/download/{folder}/{filename}', [ReportController::class, 'download'])->name('report.download');
 Route::get('/report/{id}/export-word', [ReportController::class, 'exportWord'])->name('report.exportWord');
+
+Route::prefix('penandatangan')->name('penandatangan.')->group(function () {
+    Route::get('/', [PenandatanganController::class, 'index'])->name('index');
+    Route::get('/create', [PenandatanganController::class, 'create'])->name('create');
+    Route::post('/store', [PenandatanganController::class, 'store'])->name('store');
+    Route::delete('/{id}', [PenandatanganController::class, 'destroy'])->name('destroy');
+});
 
 require __DIR__.'/auth.php';
 

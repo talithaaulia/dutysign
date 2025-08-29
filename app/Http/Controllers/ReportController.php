@@ -7,6 +7,7 @@ use App\Models\Report;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\SimpleType\Jc;
 
 class ReportController extends Controller
 {
@@ -232,7 +233,11 @@ class ReportController extends Controller
             $table->addCell(1000)->addText($no, [], ['valign' => 'top']);
             $table->addCell(4000)->addText($judul, [], ['valign' => 'top']);
             $table->addCell(300)->addText(':', [], ['valign' => 'top']);
-            $table->addCell(7000)->addText($isi, [], ['valign' => 'top']);
+            $table->addCell(7000)->addText(
+                $isi,
+                [],
+                ['alignment' => Jc::BOTH, 'valign' => 'top'] // justify isi
+            );
         }
 
         // Penutup / tanda tangan
