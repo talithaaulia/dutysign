@@ -32,10 +32,10 @@
                             <td>{{ $p->pangkat_gol }}</td>
                             <td>{{ $p->nip }}</td>
                             <td>
-                                <form action="{{ route('penandatangan.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin mau hapus?')">
+                                <form action="{{ route('penandatangan.destroy', $p->id) }}" method="POST" class="d-inline delete-confirm">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                 </form>
                             </td>
                         </tr>

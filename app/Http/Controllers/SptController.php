@@ -131,7 +131,7 @@ class SptController extends Controller
 
     // upload feature
     public function uploadForm(){
-        $spts = Spt::orderBy('created_at', 'desc')->get();
+        $spts = Spt::where('status', 'disetujui')->orderBy('created_at', 'desc')->get();
         return view('admin.upload', compact('spts'));
     }
 

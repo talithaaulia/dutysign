@@ -19,7 +19,8 @@ class ReportController extends Controller
 
     public function create()
     {
-        return view('admin.inputReport');
+        $spts = \App\Models\Spt::with('pegawais')->where('status', 'disetujui')->latest()->get();
+        return view('admin.inputReport', compact('spts'));
     }
 
     public function store(Request $request)

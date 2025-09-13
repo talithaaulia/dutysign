@@ -15,7 +15,7 @@
                     <label for="spt_id" class="form-label">Pilih SPT</label>
                     <select name="spt_id" id="spt_id" class="form-select" required>
                         <option value="">-- Pilih SPT --</option>
-                        @foreach (\App\Models\Spt::with('pegawais')->latest()->get() as $spt)
+                        @foreach ($spts as $spt)
                             <option
                                 value="{{ $spt->id }}"
                                 data-nomor="{{ $spt->nomor_surat }}"
