@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pegawai;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PegawaiController extends Controller
 {
@@ -55,5 +56,30 @@ class PegawaiController extends Controller
         $pegawai->delete();
 
         return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil dihapus.');
+    }
+
+    public function import(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls'
+        ]);
+
+        $file = $request->file('file');
+        $data = Excel::toArray([], $file);
+
+        if (!empty($data[0])) {
+            foreach ($data[0] as $row) {
+                if (count($row) < 5) continue; // pastikan ada 5 kolom
+
+                Pegawai::updateOrCreate(
+                    ['nip' => $row[2], 'niptt_pk' => $row[3]], // supaya ga duplicate
+                    [
+                        'nama'        => $row[0],
+                        'pangkat_gol' => $row[1],
+                        'jabatan'     => $row[4],
+                    ]
+                );
+            }
+        }
+        return redirect()->route('pegawai.index')->with('success', 'Data pegawai berhasil diimport!');
     }
 }

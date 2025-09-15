@@ -8,13 +8,14 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PenandatanganController;
+use App\Http\Controllers\BackupRestoreController;
 
 Route::get('/', function () {
     return redirect('/login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-route::get('/dashboard/detail/{id}', [DashboardController::class, 'detail'])->middleware(['auth'])->name('dashboard.detail');
+Route::get('/dashboard/detail/{id}', [DashboardController::class, 'detail'])->middleware(['auth'])->name('dashboard.detail');
 
 
 Route::get('/create', [SptController::class, 'create'])->middleware(['auth']);
@@ -100,6 +101,7 @@ Route::get('/pegawai/add', [PegawaiController::class, 'create'])->name('pegawai.
 Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
 Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
 Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
 
 Route::get('/report', [ReportController::class, 'create'])->name('report.create');
 Route::post('/report', [ReportController::class, 'store'])->name('report.store');
@@ -117,6 +119,13 @@ Route::prefix('penandatangan')->name('penandatangan.')->group(function () {
     Route::post('/store', [PenandatanganController::class, 'store'])->name('store');
     Route::delete('/{id}', [PenandatanganController::class, 'destroy'])->name('destroy');
 });
+
+Route::get('/backstore', function () {
+    return view('backup_restore');
+})->name('backstore');
+
+Route::get('/backup', [BackupRestoreController::class, 'backup'])->name('backup');
+Route::post('/restore', [BackupRestoreController::class, 'restore'])->name('restore');
 
 require __DIR__.'/auth.php';
 
